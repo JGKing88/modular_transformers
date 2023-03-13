@@ -10,7 +10,8 @@ requirements = [
     "torch",
     "numpy",
     "pytest",
-    "black"
+    "black",
+    "tiktoken"
 ]
 
 test_requirements = [
