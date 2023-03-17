@@ -35,7 +35,7 @@ test_requirements = [
 
 setup(
     name='modular_transformers',
-    version='0.1.0',
+    version='0.0.0',
     description="Using modular transformers to explore human language processing",
     long_description=readme,
     author="Jack King",

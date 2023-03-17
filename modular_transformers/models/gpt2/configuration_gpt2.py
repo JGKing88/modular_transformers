@@ -5,7 +5,6 @@ class GPT2Config():
     """
     Example:
     ```python
-    >>> from transformers import GPT2Config, GPT2Model
     >>> # Initializing a GPT2 configuration
     >>> configuration = GPT2Config()
     >>> # Initializing a model (with random weights) from the configuration
