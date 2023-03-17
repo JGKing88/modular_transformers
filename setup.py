@@ -8,11 +8,11 @@ with open('README.md') as readme_file:
 
 requirements = [
     "accelerate",
-    "torch",
-    "numpy",
-    "pytest",
-    "black",
-    "tiktoken",
+    "torch==1.13.1",
+    "numpy==1.23.5",
+    "pytest==7.2.2",
+    "black==23.1.0",
+    "tiktoken==0.3.1",
     "xarray",
     "torchvision",
     "torchaudio",
