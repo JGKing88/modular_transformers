@@ -7,11 +7,25 @@ with open('README.md') as readme_file:
     readme = readme_file.read()
 
 requirements = [
+    "accelerate",
     "torch",
     "numpy",
     "pytest",
     "black",
-    "tiktoken"
+    "tiktoken",
+    "xarray",
+    "torchvision",
+    "torchaudio",
+    "transformers==4.27.0",
+    "sklearn",
+    "netCDF4",
+    "h5netcdf",
+    "wandb",
+    "openpyxl",
+    "datasets",
+    "chardet",
+    "cchardet",
+    "deepspeed",
 ]
 
 test_requirements = [
