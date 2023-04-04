@@ -44,13 +44,14 @@ class Attention(nn.Module):
 
 
 class MLP(nn.Module):
-    def __init__(self, master_embd, n_embd, bias, dropout, activation):
+    def __init__(self, master_embd, n_inner, bias, dropout, activation):
         super().__init__()
         #TODO: figure out if master_embd is a worthwhile addition
-        self.l1 = nn.Linear(master_embd, n_embd, bias=bias)
-        self.l2 = nn.Linear(n_embd, master_embd, bias=bias)
+        if n_inner == None:
+            n_inner = 4 * master_embd
+        self.l1 = nn.Linear(master_embd, n_inner, bias=bias)
+        self.l2 = nn.Linear(n_inner, master_embd, bias=bias)
         self.ln = nn.LayerNorm(master_embd)
-        self.n_embd = n_embd
         self.act = activation
         self.dropout = nn.Dropout(dropout)
         self.master_embd = master_embd
@@ -98,7 +99,7 @@ class Model(nn.Module):
                 ln_f = nn.LayerNorm(n_embd)
             )
         )
-        self.output_head = nn.Linear(n_embd, vocab_size, bias=False)
+        self.lm_head = nn.Linear(n_embd, vocab_size, bias=False)
 
         #TODO: set up initialization scheme
             #i.e. modular initialization, could have init functions in a different util file
@@ -125,7 +126,7 @@ class Model(nn.Module):
         for block in self.transformer.blocks:
             x = block(x)
 
-        logits = self.output_head(x)
+        logits = self.lm_head(x)
 
         if targets is not None:
             # if we are given some desired targets also calculate the loss

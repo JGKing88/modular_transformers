@@ -22,6 +22,9 @@ import sys
 from modular_transformers.models.gpt2.utils import initialize_gpt2_weights
 import pickle
 
+from modular_transformers.models.gpt2.configuration_gpt2 import GPT2Config
+from modular_transformers.models import components
+
 """
 Basic script to train a distill-gpt2 model using accelerate and grouping function.
 Set config to use DeepSpeed
@@ -83,24 +86,31 @@ if __name__ == "__main__":
     # Logging initialization
     # Change name test to log to different project
     accelerator.init_trackers("bplm_gpt2", config=train_config,init_kwargs={'name':run_name})
-    config = AutoConfig.from_pretrained(model_name,vocab_size=len(tokenizer),n_ctx=CONTEXT_LENGTH,bos_token_id=tokenizer.bos_token_id,eos_token_id=tokenizer.eos_token_id)
-    model = AutoModelForCausalLM.from_config(config)
-    if 'gaussian' in run_name:
-        state_dict = initialize_gpt2_weights(model, permute=False)
-    else:
-        state_dict=model.state_dict()
-    if chkpoint is not None:
-        save_dir = Path(
-            f'/om2/user/ehoseini/MyData/bplm/miniberta_{data}/{model_name}/{run_name}/checkpoint_{chkpoint}')
-        chkpnt_model=AutoModelForCausalLM.from_pretrained(save_dir)
-        state_dict=chkpnt_model.state_dict()
-    # check if there is a previous run
-    model = AutoModelForCausalLM.from_pretrained(model_name, config=config, state_dict=state_dict)
-    #state_dict=None
 
-    del state_dict
+    config = GPT2Config()
+    model = components.Model(config)
+
+
+    # config = AutoConfig.from_pretrained(model_name,vocab_size=len(tokenizer),n_ctx=CONTEXT_LENGTH,bos_token_id=tokenizer.bos_token_id,eos_token_id=tokenizer.eos_token_id)
+    # model = AutoModelForCausalLM.from_config(config)
+    # if 'gaussian' in run_name:
+    #     state_dict = initialize_gpt2_weights(model, permute=False)
+    # else:
+    #     state_dict=model.state_dict()
+    # if chkpoint is not None:
+    #     save_dir = Path(
+    #         f'/om2/user/ehoseini/MyData/bplm/miniberta_{data}/{model_name}/{run_name}/checkpoint_{chkpoint}')
+    #     chkpnt_model=AutoModelForCausalLM.from_pretrained(save_dir)
+    #     state_dict=chkpnt_model.state_dict()
+    # # check if there is a previous run
+    # model = AutoModelForCausalLM.from_pretrained(model_name, config=config, state_dict=state_dict)
+    # #state_dict=None
+
+    # del state_dict
+
+    
     torch.cuda.empty_cache()
-    model.output_loss = True
+    # model.output_loss = True
     model_size = sum(t.numel() for t in model.parameters())
     print(f"{model_name} size: {model_size / 1000 ** 2:.1f}M parameters")
     model = model.to(accelerator.device)
@@ -141,8 +151,9 @@ if __name__ == "__main__":
             batch = [torch.stack(batch[x]).transpose(1, 0) for x in ['input_ids', 'attention_mask']]
             total_loss=0
             with accelerator.accumulate(model):
-                outputs = model(batch[0], labels=batch[0], attention_mask=batch[1])
-                loss = outputs.loss
+                # outputs = model(batch[0], labels=batch[0], attention_mask=batch[1])
+                # loss = outputs.loss
+                logits, loss = model(batch[0], labels=batch[0], attention_mask=batch[1])
                 total_loss+=loss
                 accelerator.backward(loss)
                 lr_scheduler.step()

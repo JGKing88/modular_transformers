@@ -19,7 +19,7 @@ from modular_transformers.train.utils import Group_Texts
 from pathlib import Path
 import sys
 
-#from bplm.models import initialize_gpt2_weights
+from modular_transformers.models.gpt2.utils import initialize_gpt2_weights
 import pickle
 
 """
@@ -30,7 +30,7 @@ Set config to use DeepSpeed
 """
 
 MAX_GPU_BATCH_SIZE = 4
-EVAL_BATCH_SIZE =8
+EVAL_BATCH_SIZE = 8
 CONTEXT_LENGTH = 1024
 
 # Evaluate function
@@ -146,7 +146,7 @@ if __name__ == "__main__":
                                         bos_token_id=tokenizer.bos_token_id,
                                         eos_token_id=tokenizer.eos_token_id)
     model = AutoModelForCausalLM.from_config(config)
-    #state_dict = initialize_gpt2_weights(model, permute=False)
+    state_dict = initialize_gpt2_weights(model, permute=False)
     model = AutoModelForCausalLM.from_pretrained(model_name,config=config,
                                       state_dict=state_dict)
     del state_dict
