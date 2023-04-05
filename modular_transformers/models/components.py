@@ -4,7 +4,7 @@ from torch.nn import functional as F
 import math
 
 class Attention(nn.Module):
-    def __init__(self, master_embd, n_embd, n_head, bias, dropout, block_size):
+    def __init__(self, master_embd, n_embd, n_head, bias, dropout, n_ctx):
         super().__init__()
         assert n_embd % n_head == 0
 
@@ -18,12 +18,12 @@ class Attention(nn.Module):
         self.n_head = n_head
         self.n_embd = n_embd
         self.dropout = nn.Dropout(dropout)
-        self.block_size = block_size
+        self.n_ctx = n_ctx
 
-        self.register_buffer("bias", torch.tril(torch.ones(block_size, block_size)).view(1, 1, block_size, block_size))
+        self.register_buffer("bias", torch.tril(torch.ones(n_ctx, n_ctx)).view(1, 1, n_ctx, n_ctx))
 
         
-    def forward(self, x):
+    def forward(self, x, attention_mask=None):
         B, T, C = x.size() # batch size, sequence length, embedding dimensionality (n_embd)
         C = self.n_embd #reset C to n_embd
 
@@ -34,6 +34,11 @@ class Attention(nn.Module):
         # compute attention per head
         att = (q @ k.transpose(-2, -1)) * (1.0 / math.sqrt(k.size(-1)))
         att = att.masked_fill(self.bias[:,:,:T,:T] == 0, float('-inf'))
+
+        if attention_mask is not None:
+            # Apply the attention mask (has to be before softmax)
+            attn_weights = attn_weights + attention_mask
+
         att = F.softmax(att, dim=-1)
         x = att @ v # (B, nh, T, T) x (B, nh, T, hs) -> (B, nh, T, hs)
 
@@ -71,8 +76,8 @@ class Block(nn.Module):
         self.attn = attn
         self.mlp = mlp
 
-    def forward(self, x):
-        x = x + self.attn(x)
+    def forward(self, x, attention_mask=None):
+        x = x + self.attn(x, attention_mask)
         x = x + self.mlp(x)
 
         return x
@@ -86,14 +91,15 @@ class Model(nn.Module):
         vocab_size = config.vocab_size
         dropout = config.dropout
         blocks = config.blocks
-        block_size = config.block_size
+        n_ctx = config.n_ctx
+        self.n_ctx = n_ctx
 
-        assert block_size == blocks[0].attn.block_size, "block size must be the same for all blocks"
+        assert n_ctx == blocks[0].attn.n_ctx, "block size must be the same for all blocks"
 
         self.transformer = nn.ModuleDict(
             dict(
                 w2v=nn.Embedding(vocab_size, n_embd),
-                pos=nn.Embedding(block_size, n_embd),
+                pos=nn.Embedding(n_ctx, n_embd),
                 drop=nn.Dropout(dropout),
                 blocks=blocks,  # blocks will be a nn.ModuleList
                 ln_f = nn.LayerNorm(n_embd)
@@ -114,17 +120,45 @@ class Model(nn.Module):
         elif isinstance(module, nn.Embedding):
             torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
 
-    def forward(self, idx, targets=None):
+    def forward(self, idx, targets=None, attention_mask=None):
         device = idx.device
-        b, t = idx.size()
-        assert t <= self.config.block_size, f"Cannot forward sequence of length {t}, block size is only {self.block_size}"
-        pos = torch.arange(0, t, dtype=torch.long, device=device).unsqueeze(0) # shape (1, t)
+        # b, t = idx.size()
+        # assert t <= self.n_ctx, f"Cannot forward sequence of length {t}, context size is only {self.n_ctx}"
+        # pos = torch.arange(0, t, dtype=torch.long, device=device).unsqueeze(0) # shape (1, t)
+        
+        #from huggingface (check to see if works)
+        
+        idx_shape = idx.size()
+        idx = idx.view(-1, idx_shape[-1])
+        batch_size = idx.shape[0]
+        
+        # Attention mask. #COPIED FROM HUGGINGFACE
+        if attention_mask is not None:
+            if batch_size <= 0:
+                raise ValueError("batch_size has to be defined and > 0")
+            attention_mask = attention_mask.view(batch_size, -1)
+            # We create a 3D attention mask from a 2D tensor mask.
+            # Sizes are [batch_size, 1, 1, to_seq_length]
+            # So we can broadcast to [batch_size, num_heads, from_seq_length, to_seq_length]
+            # this attention mask is more simple than the triangular masking of causal attention
+            # used in OpenAI GPT, we just need to prepare the broadcast dimension here.
+            attention_mask = attention_mask[:, None, None, :]
+
+            # Since attention_mask is 1.0 for positions we want to attend and 0.0 for
+            # masked positions, this operation will create a tensor which is 0.0 for
+            # positions we want to attend and the dtype's smallest value for masked positions.
+            # Since we are adding it to the raw scores before the softmax, this is
+            # effectively the same as removing these entirely.
+            attention_mask = attention_mask.to(dtype=self.dtype)  # fp16 compatibility
+            attention_mask = (1.0 - attention_mask) * torch.finfo(self.dtype).min
+
+        pos = torch.arange(0, idx_shape[1], dtype=torch.long, device=device).unsqueeze(0) # shape (1, t)
 
         tok_emb = self.transformer.w2v(idx)
         pos_emb = self.transformer.pos(pos)
         x = self.transformer.drop(tok_emb + pos_emb)
         for block in self.transformer.blocks:
-            x = block(x)
+            x = block(x, attention_mask=attention_mask)
 
         logits = self.lm_head(x)
 
@@ -143,8 +177,8 @@ class Model(nn.Module):
         the sequence max_new_tokens times, feeding the predictions back into the model each time.
         """
         for _ in range(max_new_tokens):
-            # if the sequence context is growing too long we must crop it at block_size
-            idx_cond = idx if idx.size(1) <= self.config.block_size else idx[:, -self.config.block_size:]
+            # if the sequence context is growing too long we must crop it at n_ctx
+            idx_cond = idx if idx.size(1) <= self.n_ctx else idx[:, -self.n_ctx:]
             # forward the model to get the logits for the index in the sequence
             logits, _ = self(idx_cond)
             # pluck the logits at the final step and scale by desired temperature

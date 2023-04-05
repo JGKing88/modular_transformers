@@ -87,9 +87,8 @@ if __name__ == "__main__":
     # Change name test to log to different project
     accelerator.init_trackers("bplm_gpt2", config=train_config,init_kwargs={'name':run_name})
 
-    config = GPT2Config()
+    config = GPT2Config(vocab_size=len(tokenizer), n_ctx=CONTEXT_LENGTH)
     model = components.Model(config)
-
 
     # config = AutoConfig.from_pretrained(model_name,vocab_size=len(tokenizer),n_ctx=CONTEXT_LENGTH,bos_token_id=tokenizer.bos_token_id,eos_token_id=tokenizer.eos_token_id)
     # model = AutoModelForCausalLM.from_config(config)
