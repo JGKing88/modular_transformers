@@ -87,8 +87,12 @@ if __name__ == "__main__":
     # Change name test to log to different project
     accelerator.init_trackers("bplm_gpt2", config=train_config,init_kwargs={'name':run_name})
 
-    config = GPT2Config(vocab_size=len(tokenizer), n_ctx=CONTEXT_LENGTH)
-    model = components.Model(config)
+    #model level config is set in configuration.py
+    #train level config is set here
+    override_vars = {'vocab_size': len(tokenizer), 'n_ctx': CONTEXT_LENGTH, 'bos_token_id': tokenizer.bos_token_id,
+                     'eos_token_id': tokenizer.eos_token_id}
+    config = GPT2Config(override_vars)
+    model = components.LM(config)
 
     # config = AutoConfig.from_pretrained(model_name,vocab_size=len(tokenizer),n_ctx=CONTEXT_LENGTH,bos_token_id=tokenizer.bos_token_id,eos_token_id=tokenizer.eos_token_id)
     # model = AutoModelForCausalLM.from_config(config)
@@ -150,9 +154,8 @@ if __name__ == "__main__":
             batch = [torch.stack(batch[x]).transpose(1, 0) for x in ['input_ids', 'attention_mask']]
             total_loss=0
             with accelerator.accumulate(model):
-                # outputs = model(batch[0], labels=batch[0], attention_mask=batch[1])
-                # loss = outputs.loss
-                logits, loss = model(batch[0], labels=batch[0], attention_mask=batch[1])
+                outputs = model(batch[0], labels=batch[0], attention_mask=batch[1])
+                loss = outputs.loss
                 total_loss+=loss
                 accelerator.backward(loss)
                 lr_scheduler.step()
