@@ -66,3 +66,4 @@ def initialize_gpt2_weights(model,mu=0,sigma=0.02,permute=False):
         else:
             perm_states[key] = orig_states[key]
     return perm_states
+

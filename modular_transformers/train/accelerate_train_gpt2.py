@@ -33,7 +33,7 @@ Set config to use DeepSpeed
 """
 
 MAX_GPU_BATCH_SIZE = 8
-EVAL_BATCH_SIZE =32
+EVAL_BATCH_SIZE = 1
 CONTEXT_LENGTH = 1024
 
 # Evaluate function
@@ -54,12 +54,14 @@ def evaluate():
     return loss.item(), perplexity.item()
 
 if __name__ == "__main__":
-    run_name='gaussian_init_1'
+    # run_name='gaussian_init_1'
+    run_name = "test"
     model_name='gpt2'
     data='10M'
+    batch_size = 1
     #chkpoint=43750
     chkpoint = None
-    train_config = {"lr": 0.0006, "num_epochs": 100, "correct_bias": True, "seed": 42, "batch_size": 64}
+    train_config = {"lr": 0.0006, "num_epochs": 1, "correct_bias": True, "seed": 42, "batch_size": batch_size}
     tokenizer = AutoTokenizer.from_pretrained("gpt2", fast=False)
     tokenizer.pad_token = tokenizer.eos_token
     grouped_pad_train = load_from_disk(
@@ -71,6 +73,7 @@ if __name__ == "__main__":
     grouped_pad_valid = load_from_disk(
         os.path.join('/om/user/ehoseini/MyData/miniBERTa_v2/', f'miniBERTa-{data}-crunched',
                      f'valid_context_len_{CONTEXT_LENGTH}'))
+
     # If the batch size is too big we use gradient accumulation
     gradient_accumulation_steps = 8
     if train_config['batch_size'] > MAX_GPU_BATCH_SIZE:
@@ -113,7 +116,7 @@ if __name__ == "__main__":
 
     
     torch.cuda.empty_cache()
-    # model.output_loss = True
+    model.output_loss = True
     model_size = sum(t.numel() for t in model.parameters())
     print(f"{model_name} size: {model_size / 1000 ** 2:.1f}M parameters")
     model = model.to(accelerator.device)
@@ -173,18 +176,18 @@ if __name__ == "__main__":
                     valid_loss, valid_accuracy = evaluate()
                 accelerator.log({"validation/valid_loss": valid_loss}, step=abs_step)
                 accelerator.log({"validation/valid_accuracy": valid_accuracy}, step=abs_step)
-                save_dir = Path(
-                    f'/om2/user/ehoseini/MyData/bplm/miniberta_{data}/{model_name}/{run_name}/checkpoint_{abs_step}')
-                save_dir.mkdir(parents=True, exist_ok=True)
-                accelerator.wait_for_everyone()
-                unwrapped_model = accelerator.unwrap_model(model)
-                unwrapped_model.save_pretrained(save_dir, save_function=accelerator.save,
-                                                state_dict=accelerator.get_state_dict(model))
-                accelerator.save(
-                    {
-                        "epoch": epoch,"steps": abs_step,"optimizer": optimizer.state_dict(),
-                        "scheduler": lr_scheduler.state_dict(),
-                    },os.path.join(save_dir,'accelerator_states'))
+                # save_dir = Path(
+                #     f'/om2/user/ehoseini/MyData/bplm/miniberta_{data}/{model_name}/{run_name}/checkpoint_{abs_step}')
+                # save_dir.mkdir(parents=True, exist_ok=True)
+                # accelerator.wait_for_everyone()
+                # unwrapped_model = accelerator.unwrap_model(model)
+                # unwrapped_model.save_pretrained(save_dir, save_function=accelerator.save,
+                #                                 state_dict=accelerator.get_state_dict(model))
+                # accelerator.save(
+                #     {
+                #         "epoch": epoch,"steps": abs_step,"optimizer": optimizer.state_dict(),
+                #         "scheduler": lr_scheduler.state_dict(),
+                #     },os.path.join(save_dir,'accelerator_states'))
                 model.train()
                 torch.cuda.empty_cache()
             abs_step+=1
