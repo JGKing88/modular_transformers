@@ -1,0 +1,22 @@
+/var/slurm/slurmd/job30368213/slurm_script: line 21: /home/ehoseini/.bash_profile: Permission denied
+
+CommandNotFoundError: Your shell has not been properly configured to use 'conda activate'.
+To initialize your shell, run
+
+    $ conda init <SHELL_NAME>
+
+Currently supported shells are:
+  - bash
+  - fish
+  - tcsh
+  - xonsh
+  - zsh
+  - powershell
+
+See 'conda init --help' for more information and options.
+
+IMPORTANT: You may need to close and restart your shell after running 'conda init'.
+
+
+/om2/user/jackking/anaconda/bin/python
+/var/slurm/slurmd/job30368213/slurm_script: line 27: accelerate: command not found
