@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=MT_gpt2
 #SBATCH --time=2-12:00:00
-#SBATCH --gres=gpu:RTXA6000:2
+#SBATCH --gres=gpu:A100:2
 #SBATCH --ntasks=1
 #SBATCH --mem=120G
 #SBATCH --mail-type=ALL
@@ -22,3 +22,6 @@ conda activate modular_transformers
 echo $(which python)
 
 accelerate launch --config_file "${MT_HOME}/modular_transformers/train/configs/deepspeed_config.yaml" "${MT_HOME}/modular_transformers/train/accelerate_train_gpt2.py"
+
+
+########SBATCH --gres=gpu:RTXA6000:2

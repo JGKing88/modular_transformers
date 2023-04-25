@@ -9,6 +9,13 @@
           </mappings>
         </serverdata>
       </paths>
+      <paths name="ehoseini@node094:22 agent">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/om2/user/ehoseini/modular_transformers/" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
     </serverData>
   </component>
 </project>
