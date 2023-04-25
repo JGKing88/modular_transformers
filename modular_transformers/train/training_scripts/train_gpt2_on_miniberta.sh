@@ -6,7 +6,6 @@
 #SBATCH --mem=120G
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=jackking@mit.edu
-#SBATCH --mail-type=ALL
 #SBATCH --partition=evlab
 
 
@@ -15,13 +14,13 @@ module load openmind/cuda/11.3
 USER_NAME=$(whoami)
 
 MT_HOME="/om2/user/${USER_NAME}/modular_transformers/"
-# MT_HOME="/om2/user/ehoseini/modular_transformers/"
+# #MT_HOME="/om2/user/ehoseini/modular_transformers/"
 # run the .bash_profile file from USER_NAME home directory
 . /home/${USER_NAME}/.bash_profile
-# . /home/ehoseini/.bash_profile
+## . /home/ehoseini/.bash_profile
 
 
-conda activate /om/user/ehoseini/miniconda3/envs/modular_transformers
+conda activate modular_transformers
 echo $(which python)
 
 accelerate launch --config_file "${MT_HOME}/modular_transformers/train/configs/deepspeed_config.yaml" "${MT_HOME}/modular_transformers/train/accelerate_train_gpt2.py"
