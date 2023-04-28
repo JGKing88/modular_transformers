@@ -8,7 +8,7 @@ with open('README.md') as readme_file:
 
 requirements = [
     "accelerate",
-    "torch==2",
+    "torch==1.13.1",
     "numpy==1.23.5",
     "pytest==7.2.2",
     "black==23.1.0",
