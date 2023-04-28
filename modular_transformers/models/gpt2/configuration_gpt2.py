@@ -17,9 +17,9 @@ activation_function (`str`, *optional*, defaults to `"gelu"`):
 class GPT2Config(transformers.GPT2Config):
     def __init__(self, config):
         super().__init__(vocab_size=config["vocab_size"],n_ctx=config["n_ctx"],bos_token_id=config["bos_token_id"],eos_token_id=config["eos_token_id"])
-        self.n_embds = [8] #list of embedding size for the rest of the blocks
+        self.n_embds = [4] #list of embedding size for the rest of the blocks
         self.n_heads = [4]
-        self.n_inners = [32]
+        self.n_inners = [16]
         self.activation_functions = ["gelu"]
 
         self.n_layer = len(self.n_embds)
@@ -29,21 +29,21 @@ class GPT2Config(transformers.GPT2Config):
         self.activation_function = self.activation_functions[0]
 
 
-class GPT2miniConfig(PretrainedConfig):
-    def __init__(self, config):
+# class GPT2miniConfig(PretrainedConfig):
+#     def __init__(self, config):
         
-        self.n_embds = [8] #list of embedding size for the rest of the blocks
-        self.n_heads = [4]
-        self.n_inners = [32]
-        self.activation_functions = ["gelu"]
+#         self.n_embds = [8] #list of embedding size for the rest of the blocks
+#         self.n_heads = [4]
+#         self.n_inners = [32]
+#         self.activation_functions = ["gelu"]
 
-        self.n_layer = len(self.n_embds)
-        self.n_embd = self.n_embds[0]
-        self.n_head = self.n_heads[0]
-        self.n_inner = self.n_inners[0]
-        self.activation_function = self.activation_functions[0]
-        super(GPT2miniConfig,self).__init__(vocab_size=config["vocab_size"], n_ctx=config["n_ctx"], bos_token_id=config["bos_token_id"],
-                         eos_token_id=config["eos_token_id"])
+#         self.n_layer = len(self.n_embds)
+#         self.n_embd = self.n_embds[0]
+#         self.n_head = self.n_heads[0]
+#         self.n_inner = self.n_inners[0]
+#         self.activation_function = self.activation_functions[0]
+#         super(GPT2miniConfig,self).__init__(vocab_size=config["vocab_size"], n_ctx=config["n_ctx"], bos_token_id=config["bos_token_id"],
+#                          eos_token_id=config["eos_token_id"])
 
 
 # class GPT2Config():

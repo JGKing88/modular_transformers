@@ -132,3 +132,6 @@ dmypy.json
 
 #logging
 wandb/
+
+#data
+miniberta_datasets/
