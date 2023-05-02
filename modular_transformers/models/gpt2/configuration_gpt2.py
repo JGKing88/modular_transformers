@@ -1,6 +1,8 @@
 from modular_transformers.models import components
 import torch.nn as nn
 import transformers
+from modular_transformers.models.loss_utils import l2_reg
+
 
 """
 n_embd (`int`, *optional*, defaults to 768):
@@ -16,17 +18,26 @@ activation_function (`str`, *optional*, defaults to `"gelu"`):
 """
 class GPT2Config(transformers.GPT2Config):
     def __init__(self, config):
-        super().__init__(vocab_size=config["vocab_size"],n_ctx=config["n_ctx"],bos_token_id=config["bos_token_id"],eos_token_id=config["eos_token_id"])
-        self.n_embds = [4] #list of embedding size for the rest of the blocks
-        self.n_heads = [4]
-        self.n_inners = [16]
-        self.activation_functions = ["gelu"]
+        self.n_embds = [8, 4] #list of embedding size for the rest of the blocks
+        self.n_heads = [4, 4]
+        self.n_inners = [32, 16]
+        self.activation_functions = ["gelu"]*2
+        assert len(self.n_embds) == len(self.n_heads) == len(self.n_inners) == len(self.activation_functions)
 
+        super().__init__(hidden_size=self.n_embds[0], vocab_size=config["vocab_size"], n_ctx=config["n_ctx"],bos_token_id=config["bos_token_id"],eos_token_id=config["eos_token_id"])
+        
         self.n_layer = len(self.n_embds)
         self.n_embd = self.n_embds[0]
         self.n_head = self.n_heads[0]
         self.n_inner = self.n_inners[0]
         self.activation_function = self.activation_functions[0]
+        
+        # self.loss_hooks = {2:l2_reg}
+        self.loss_hooks = {}
+
+        #make sure the loss hooks are valid
+        for layer in self.loss_hooks.keys():
+            assert layer < self.n_layer
 
 
 # class GPT2miniConfig(PretrainedConfig):

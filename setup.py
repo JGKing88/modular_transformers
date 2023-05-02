@@ -17,7 +17,7 @@ requirements = [
     "torchvision",
     "torchaudio",
     "transformers==4.27.0",
-    "sklearn",
+    "scikit-learn",
     "netCDF4",
     "h5netcdf",
     "wandb",

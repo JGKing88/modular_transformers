@@ -24,6 +24,8 @@ import pickle
 from modular_transformers.models.gpt2.configuration_gpt2 import GPT2Config
 from modular_transformers.models import components
 
+import wandb
+
 """
 Basic script to train a distill-gpt2 model using accelerate and grouping function.
 Set config to use DeepSpeed
@@ -33,7 +35,7 @@ Set config to use DeepSpeed
 
 MAX_GPU_BATCH_SIZE = 8
 EVAL_BATCH_SIZE = 1 #32
-CONTEXT_LENGTH = 10 #1024
+CONTEXT_LENGTH = 1024 #1024
 
 # Evaluate function
 # def evaluate():
@@ -166,6 +168,14 @@ if __name__ == "__main__":
             # with accelerator.accumulate(model):
             outputs = model(batch[0], labels=batch[0], attention_mask=batch[1])
             loss = outputs.loss
+
+            # dealing with extra losses. can change by case
+            #can not do this here and instead backpropagate from the middle (in components.py)
+            extra_losses = model.output_extra_losses()
+            for extra_loss in extra_losses.values():
+                if extra_loss is not None:
+                    loss += extra_loss
+
             total_loss+=loss
                 # accelerator.backward(loss)
             loss.backward()
@@ -173,6 +183,8 @@ if __name__ == "__main__":
             optimizer.step()
             optimizer.zero_grad()
             batch_count += len(batch)
+
+
             # accelerator.log({"training_loss": total_loss}, step=abs_step)
             # accelerator.log({"train/train_loss": total_loss}, step=abs_step)
             # accelerator.log({"train/epoch": (step + 1 + (n_steps_per_epoch * epoch)) / n_steps_per_epoch},
