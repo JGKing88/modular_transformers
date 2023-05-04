@@ -5,8 +5,8 @@
 #SBATCH --ntasks=1
 #SBATCH --mem=120G
 #SBATCH --mail-type=ALL
+#SBATCH --exclude node017,node018
 #SBATCH --mail-user=jackking@mit.edu
-#SBATCH --mail-type=ALL
 #SBATCH --partition=evlab
 
 
