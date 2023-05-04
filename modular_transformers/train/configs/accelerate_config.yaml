@@ -1,6 +1,6 @@
 compute_environment: LOCAL_MACHINE
 deepspeed_config: {}
-distributed_type: MULTI_GPU
+distributed_type: NO
 downcast_bf16: 'no'
 dynamo_config: {}
 fsdp_config: {}
