@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=MT_gpt2
 #SBATCH --time=2-12:00:00
-#SBATCH --gres=gpu:A100:2
+#SBATCH --gres=gpu:RTXA6000:1
 #SBATCH --ntasks=1
 #SBATCH --mem=120G
 #SBATCH --mail-type=ALL
