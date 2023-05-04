@@ -1,8 +1,0 @@
-/om2/user/jackking/anaconda/envs/modular_transformers/bin/python
-The following values were not passed to `accelerate launch` and had defaults used instead:
-	`--dynamo_backend` was set to a value of `'no'`
-To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
-WARNING:torch.distributed.run:
-*****************************************
-Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
-*****************************************

@@ -1,5 +1,0 @@
-/om2/user/jackking/anaconda/envs/mod_tran/bin/python
-Traceback (most recent call last):
-  File "/om2/user/jackking/anaconda/envs/mod_tran/bin/accelerate", line 5, in <module>
-    from accelerate.commands.accelerate_cli import main
-ModuleNotFoundError: No module named 'accelerate'
