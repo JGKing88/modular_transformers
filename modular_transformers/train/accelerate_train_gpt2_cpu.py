@@ -24,6 +24,8 @@ import pickle
 from modular_transformers.models.gpt2.configuration_gpt2 import GPT2Config
 from modular_transformers.models import components
 
+import wandb
+
 """
 Basic script to train a distill-gpt2 model using accelerate and grouping function.
 Set config to use DeepSpeed
@@ -32,8 +34,8 @@ Set config to use DeepSpeed
 """
 
 MAX_GPU_BATCH_SIZE = 8
-EVAL_BATCH_SIZE =32
-CONTEXT_LENGTH = 1024
+EVAL_BATCH_SIZE = 1 #32
+CONTEXT_LENGTH = 1024 #1024
 
 # Evaluate function
 # def evaluate():
@@ -73,8 +75,9 @@ if __name__ == "__main__":
     #     os.path.join('/om/user/ehoseini/MyData/miniBERTa_v2/', f'miniBERTa-{data}-crunched',
     #                  f'valid_context_len_{CONTEXT_LENGTH}'))
     
-    grouped_pad_train = load_from_disk('modular_transformers/train/miniBERTa-10M-crunched/train_context_len_1024')
-    grouped_pad_valid = load_from_disk('modular_transformers/train/miniBERTa-10M-crunched/valid_context_len_1024')
+    print('here')
+    grouped_pad_train = load_from_disk('/Users/jackking/Desktop/code/modular_transformers/modular_transformers/train/miniberta_datasets/miniBERTa-10M-crunched/valid_context_len_1024')
+    # grouped_pad_valid = load_from_disk('/Users/jackking/Desktop/code/modular_transformers/modular_transformers/train/miniberta_datasets/miniBERTa-10M-crunched/valid_context_len_1024')
 
     # If the batch size is too big we use gradient accumulation
     gradient_accumulation_steps = 8
@@ -83,11 +86,11 @@ if __name__ == "__main__":
         batch_size = MAX_GPU_BATCH_SIZE
     # accelerator = Accelerator(log_with="wandb",gradient_accumulation_steps=gradient_accumulation_steps)
 
-    eval_dataloader = DataLoader(grouped_pad_valid, shuffle=False, batch_size=EVAL_BATCH_SIZE)
+    # eval_dataloader = DataLoader(grouped_pad_valid, shuffle=False, batch_size=EVAL_BATCH_SIZE)
     # test_dataloader = DataLoader(grouped_pad_test, shuffle=True, batch_size=EVAL_BATCH_SIZE)
     train_dataloader = DataLoader(grouped_pad_train, shuffle=True, batch_size=batch_size)
     # del grouped_pad_train, grouped_pad_valid, grouped_pad_test
-    del grouped_pad_train, grouped_pad_valid
+    del grouped_pad_train
 
     # Logging initialization
     # Change name test to log to different project
@@ -99,8 +102,6 @@ if __name__ == "__main__":
                      'eos_token_id': tokenizer.eos_token_id}
     config = GPT2Config(override_vars)
     model = components.LM(config)
-
-    print("post model construction")
 
     # config = AutoConfig.from_pretrained(model_name,vocab_size=len(tokenizer),n_ctx=CONTEXT_LENGTH,bos_token_id=tokenizer.bos_token_id,eos_token_id=tokenizer.eos_token_id)
     # model = AutoModelForCausalLM.from_config(config)
@@ -167,6 +168,14 @@ if __name__ == "__main__":
             # with accelerator.accumulate(model):
             outputs = model(batch[0], labels=batch[0], attention_mask=batch[1])
             loss = outputs.loss
+
+            # dealing with extra losses. can change by case
+            #can not do this here and instead backpropagate from the middle (in components.py)
+            extra_losses = model.output_extra_losses()
+            for extra_loss in extra_losses.values():
+                if extra_loss is not None:
+                    loss += extra_loss
+
             total_loss+=loss
                 # accelerator.backward(loss)
             loss.backward()
@@ -174,6 +183,8 @@ if __name__ == "__main__":
             optimizer.step()
             optimizer.zero_grad()
             batch_count += len(batch)
+
+
             # accelerator.log({"training_loss": total_loss}, step=abs_step)
             # accelerator.log({"train/train_loss": total_loss}, step=abs_step)
             # accelerator.log({"train/epoch": (step + 1 + (n_steps_per_epoch * epoch)) / n_steps_per_epoch},
