@@ -21,7 +21,8 @@ MT_HOME="/om2/user/${USER_NAME}/modular_transformers/"
 conda activate modular_transformers
 echo $(which python)
 
-accelerate launch --config_file "${MT_HOME}/modular_transformers/train/configs/accelerate_config.yaml" "${MT_HOME}/modular_transformers/train/accelerate_train_gpt2.py"
+accelerate launch  "${MT_HOME}/modular_transformers/train/accelerate_train_gpt2.py"
 
 
 ########SBATCH --gres=gpu:RTXA6000:2
+### --config_file "${MT_HOME}/modular_transformers/train/configs/accelerate_config.yaml"
