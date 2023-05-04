@@ -1,0 +1,27 @@
+/var/slurm/slurmd/job30542586/slurm_script: line 13: module: command not found
+/om2/user/jackking/anaconda/envs/modular_transformers/bin/python
+Traceback (most recent call last):
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/__init__.py", line 172, in _load_global_deps
+    ctypes.CDLL(lib_path, mode=ctypes.RTLD_GLOBAL)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/ctypes/__init__.py", line 373, in __init__
+    self._handle = _dlopen(self._name, mode)
+OSError: /om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/lib/../../nvidia/cublas/lib/libcublas.so.11: undefined symbol: cublasLtGetStatusString, version libcublasLt.so.11
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/bin/accelerate", line 5, in <module>
+    from accelerate.commands.accelerate_cli import main
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/__init__.py", line 3, in <module>
+    from .accelerator import Accelerator
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/accelerator.py", line 27, in <module>
+    import torch
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/__init__.py", line 217, in <module>
+    _load_global_deps()
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/__init__.py", line 178, in _load_global_deps
+    _preload_cuda_deps()
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/__init__.py", line 158, in _preload_cuda_deps
+    ctypes.CDLL(cublas_path)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/ctypes/__init__.py", line 373, in __init__
+    self._handle = _dlopen(self._name, mode)
+OSError: /om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/nvidia/cublas/lib/libcublas.so.11: undefined symbol: cublasLtGetStatusString, version libcublasLt.so.11

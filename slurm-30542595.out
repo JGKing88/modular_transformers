@@ -1,0 +1,43 @@
+/om2/user/jackking/anaconda/envs/modular_transformers/bin/python
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+WARNING:torch.distributed.run:
+*****************************************
+Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+*****************************************
+[W socket.cpp:426] [c10d] The server socket has failed to bind to [::]:29500 (errno: 98 - Address already in use).
+[W socket.cpp:426] [c10d] The server socket has failed to bind to 0.0.0.0:29500 (errno: 98 - Address already in use).
+[E socket.cpp:462] [c10d] The server socket has failed to listen on any local network address.
+Traceback (most recent call last):
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/bin/accelerate", line 8, in <module>
+    sys.exit(main())
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/commands/accelerate_cli.py", line 45, in main
+    args.func(args)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/commands/launch.py", line 900, in launch_command
+    deepspeed_launcher(args)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/commands/launch.py", line 643, in deepspeed_launcher
+    distrib_run.run(args)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/distributed/run.py", line 753, in run
+    elastic_launch(
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/distributed/launcher/api.py", line 132, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/distributed/launcher/api.py", line 237, in launch_agent
+    result = agent.run()
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/distributed/elastic/metrics/api.py", line 129, in wrapper
+    result = f(*args, **kwargs)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/distributed/elastic/agent/server/api.py", line 709, in run
+    result = self._invoke_run(role)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/distributed/elastic/agent/server/api.py", line 844, in _invoke_run
+    self._initialize_workers(self._worker_group)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/distributed/elastic/metrics/api.py", line 129, in wrapper
+    result = f(*args, **kwargs)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/distributed/elastic/agent/server/api.py", line 678, in _initialize_workers
+    self._rendezvous(worker_group)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/distributed/elastic/metrics/api.py", line 129, in wrapper
+    result = f(*args, **kwargs)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/distributed/elastic/agent/server/api.py", line 538, in _rendezvous
+    store, group_rank, group_world_size = spec.rdzv_handler.next_rendezvous()
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/distributed/elastic/rendezvous/static_tcp_rendezvous.py", line 55, in next_rendezvous
+    self._store = TCPStore(  # type: ignore[call-arg]
+RuntimeError: The server socket has failed to listen on any local network address. The server socket has failed to bind to [::]:29500 (errno: 98 - Address already in use). The server socket has failed to bind to 0.0.0.0:29500 (errno: 98 - Address already in use).
