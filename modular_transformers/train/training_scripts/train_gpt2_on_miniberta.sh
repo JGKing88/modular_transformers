@@ -14,6 +14,7 @@
 module load openmind/cuda/11.3
 # find the user name
 USER_NAME=$(whoami)
+unset CUDA_VISIBLE_DEVICES
 
 MT_HOME="/om2/user/${USER_NAME}/modular_transformers/"
 # run the .bash_profile file from USER_NAME home directory
