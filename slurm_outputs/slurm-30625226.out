@@ -1,0 +1,52 @@
+/om2/user/jackking/anaconda/envs/modular_transformers/bin/python
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+wandb: Currently logged in as: jack-g-king. Use `wandb login --relogin` to force relogin
+wandb: Appending key for api.wandb.ai to your netrc file: /home/jackking/.netrc
+Downloading and preparing dataset json/miniBERTa-100M to /home/jackking/.cache/huggingface/datasets/json/miniBERTa-100M-c428575d45cb1e57/0.0.0/0f7e3662623656454fcd2b650f34e886a7db4b9104504885bd462096cc7a9f51...
+Downloading data files:   0%|          | 0/3 [00:00<?, ?it/s]Downloading data files: 100%|██████████| 3/3 [00:00<00:00, 1690.12it/s]
+Extracting data files:   0%|          | 0/3 [00:00<?, ?it/s]Traceback (most recent call last):
+  File "/om2/user/jackking/modular_transformers/modular_transformers/train/accelerate_train_gpt2.py", line 77, in <module>
+    mini_dataset = load_dataset('/nese/mit/group/evlab/u/Shared/llm_dataset/miniBERTa/miniBERTa-100M')
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/load.py", line 1782, in load_dataset
+    builder_instance.download_and_prepare(
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/builder.py", line 872, in download_and_prepare
+    self._download_and_prepare(
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/builder.py", line 945, in _download_and_prepare
+    split_generators = self._split_generators(dl_manager, **split_generators_kwargs)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/packaged_modules/json/json.py", line 68, in _split_generators
+    data_files = dl_manager.download_and_extract(self.config.data_files)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/download/download_manager.py", line 564, in download_and_extract
+    return self.extract(self.download(url_or_urls))
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/download/download_manager.py", line 536, in extract
+    extracted_paths = map_nested(
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/utils/py_utils.py", line 443, in map_nested
+    mapped = [
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/utils/py_utils.py", line 444, in <listcomp>
+    _single_map_nested((function, obj, types, None, True, None))
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/utils/py_utils.py", line 363, in _single_map_nested
+    mapped = [_single_map_nested((function, v, types, None, True, None)) for v in pbar]
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/utils/py_utils.py", line 363, in <listcomp>
+    mapped = [_single_map_nested((function, v, types, None, True, None)) for v in pbar]
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/utils/py_utils.py", line 346, in _single_map_nested
+    return function(data_struct)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/utils/file_utils.py", line 210, in cached_path
+    output_path = ExtractManager(cache_dir=download_config.cache_dir).extract(
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/utils/extract.py", line 47, in extract
+    self.extractor.extract(input_path, output_path, extractor_format)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/utils/extract.py", line 313, in extract
+    return extractor.extract(input_path, output_path)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/utils/extract.py", line 192, in extract
+    raise ImportError("Please pip install zstandard")
+ImportError: Please pip install zstandard
+Traceback (most recent call last):
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/bin/accelerate", line 8, in <module>
+    sys.exit(main())
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/commands/accelerate_cli.py", line 45, in main
+    args.func(args)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/commands/launch.py", line 915, in launch_command
+    simple_launcher(args)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/commands/launch.py", line 578, in simple_launcher
+    raise subprocess.CalledProcessError(returncode=process.returncode, cmd=cmd)
+subprocess.CalledProcessError: Command '['/om2/user/jackking/anaconda/envs/modular_transformers/bin/python', '/om2/user/jackking/modular_transformers/modular_transformers/train/accelerate_train_gpt2.py']' returned non-zero exit status 1.

@@ -1,0 +1,46 @@
+/om2/user/jackking/anaconda/envs/modular_transformers/bin/python
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+wandb: Currently logged in as: jack-g-king. Use `wandb login --relogin` to force relogin
+wandb: Appending key for api.wandb.ai to your netrc file: /home/jackking/.netrc
+Downloading and preparing dataset mini_ber_ta_v2/miniBERTa-100M to /home/jackking/.cache/huggingface/datasets/mini_ber_ta_v2/miniBERTa-100M/1.0.0/a63e44a4758be47a1cdcc61aa02188ca7a543f1c7122207bc154588186820928...
+Generating test split: 0 examples [00:00, ? examples/s]Generating test split: 5273 examples [00:00, 51046.98 examples/s]Generating test split: 18572 examples [00:00, 76428.82 examples/s]Generating test split: 27509 examples [00:00, 81235.46 examples/s]Generating test split: 36386 examples [00:00, 83929.65 examples/s]Generating test split: 45385 examples [00:00, 85975.58 examples/s]Generating test split: 54441 examples [00:00, 87466.30 examples/s]Generating test split: 63287 examples [00:00, 87780.84 examples/s]Generating test split: 76268 examples [00:00, 87275.42 examples/s]Generating test split: 85189 examples [00:01, 87812.01 examples/s]Generating test split: 94026 examples [00:01, 87970.53 examples/s]Generating test split: 102899 examples [00:01, 88187.46 examples/s]Generating test split: 116268 examples [00:01, 88543.80 examples/s]Generating test split: 125305 examples [00:01, 69784.23 examples/s]Generating test split: 134127 examples [00:01, 74026.30 examples/s]Generating test split: 143000 examples [00:01, 77647.35 examples/s]Generating test split: 151917 examples [00:01, 80655.73 examples/s]Generating test split: 160580 examples [00:01, 82272.78 examples/s]Generating test split: 169281 examples [00:02, 83539.15 examples/s]Generating test split: 178148 examples [00:02, 84998.49 examples/s]Generating test split: 186926 examples [00:02, 85797.49 examples/s]Generating test split: 195630 examples [00:02, 86158.03 examples/s]Generating test split: 204661 examples [00:02, 87356.57 examples/s]Generating test split: 213628 examples [00:02, 88038.09 examples/s]Generating test split: 222604 examples [00:02, 88547.43 examples/s]Generating test split: 235746 examples [00:02, 88142.81 examples/s]Generating test split: 244592 examples [00:02, 88226.31 examples/s]Generating test split: 257571 examples [00:03, 87600.16 examples/s]Generating test split: 266484 examples [00:03, 87993.57 examples/s]                                                                   Generating train split: 0 examples [00:00, ? examples/s]Traceback (most recent call last):
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/builder.py", line 1608, in _prepare_split_single
+    for key, record in generator:
+  File "/home/jackking/.cache/huggingface/modules/datasets_modules/datasets/miniBERTa_v2/a63e44a4758be47a1cdcc61aa02188ca7a543f1c7122207bc154588186820928/miniBERTa_v2.py", line 170, in _generate_examples
+    with open(data_file, encoding="utf-8") as f:
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/streaming.py", line 70, in wrapper
+    return function(*args, use_auth_token=use_auth_token, **kwargs)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/download/streaming_download_manager.py", line 482, in xopen
+    return open(main_hop, mode, *args, **kwargs)
+PermissionError: [Errno 13] Permission denied: '/om/user/ehoseini/MyData/miniBERTa_v2/miniBERTa-100M/proc_data_train_for_100M.raw'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/om2/user/jackking/modular_transformers/modular_transformers/train/accelerate_train_gpt2.py", line 77, in <module>
+    mini_dataset = load_dataset('/om/user/ehoseini/MyData/miniBERTa_v2/',
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/load.py", line 1782, in load_dataset
+    builder_instance.download_and_prepare(
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/builder.py", line 872, in download_and_prepare
+    self._download_and_prepare(
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/builder.py", line 1649, in _download_and_prepare
+    super()._download_and_prepare(
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/builder.py", line 967, in _download_and_prepare
+    self._prepare_split(split_generator, **prepare_split_kwargs)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/builder.py", line 1488, in _prepare_split
+    for job_id, done, content in self._prepare_split_single(
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/builder.py", line 1644, in _prepare_split_single
+    raise DatasetGenerationError("An error occurred while generating the dataset") from e
+datasets.builder.DatasetGenerationError: An error occurred while generating the dataset
+Traceback (most recent call last):
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/bin/accelerate", line 8, in <module>
+    sys.exit(main())
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/commands/accelerate_cli.py", line 45, in main
+    args.func(args)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/commands/launch.py", line 915, in launch_command
+    simple_launcher(args)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/commands/launch.py", line 578, in simple_launcher
+    raise subprocess.CalledProcessError(returncode=process.returncode, cmd=cmd)
+subprocess.CalledProcessError: Command '['/om2/user/jackking/anaconda/envs/modular_transformers/bin/python', '/om2/user/jackking/modular_transformers/modular_transformers/train/accelerate_train_gpt2.py']' returned non-zero exit status 1.

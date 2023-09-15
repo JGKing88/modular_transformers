@@ -1,0 +1,51 @@
+/om2/user/jackking/anaconda/envs/modular_transformers/bin/python
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+wandb: Currently logged in as: jack-g-king (modular_transformers). Use `wandb login --relogin` to force relogin
+wandb: Appending key for api.wandb.ai to your netrc file: /home/jackking/.netrc
+wandb: wandb version 0.15.10 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.14.0
+wandb: Run data is saved locally in /net/vast-storage/scratch/vast/evlab/jackking/modular_transformers/slurm_outputs/wandb/run-20230912_164338-m9r1sutr
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run clean-sky-20
+wandb: ⭐️ View project at https://wandb.ai/modular_transformers/curvature_testing
+wandb: 🚀 View run at https://wandb.ai/modular_transformers/curvature_testing/runs/m9r1sutr
+wandb: WARNING Calling wandb.run.save without any arguments is deprecated.Changes to attributes are automatically persisted.
+768-128-768 size: 93.1M parameters
+  0%|          | 0/12 [00:00<?, ?it/s]
+  0%|          | 0/4348 [00:00<?, ?it/s][A  0%|          | 0/4348 [00:01<?, ?it/s]
+  0%|          | 0/12 [00:01<?, ?it/s]
+wandb: Waiting for W&B process to finish... (failed 1). Press Control-C to abort syncing.
+wandb: 🚀 View run clean-sky-20 at: https://wandb.ai/modular_transformers/curvature_testing/runs/m9r1sutr
+wandb: Synced 6 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20230912_164338-m9r1sutr/logs
+Traceback (most recent call last):
+  File "/om2/user/jackking/modular_transformers/modular_transformers/train/accelerate_train_gpt2.py", line 165, in <module>
+    outputs = model(batch[0], labels=batch[0], attention_mask=batch[1])
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/utils/operations.py", line 495, in __call__
+    return convert_to_fp32(self.model_forward(*args, **kwargs))
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/utils/operations.py", line 474, in convert_to_fp32
+    return recursively_apply(_convert_to_fp32, tensor, test_type=_is_fp16_bf16_tensor)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/utils/operations.py", line 93, in recursively_apply
+    {
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/utils/operations.py", line 94, in <dictcomp>
+    k: recursively_apply(
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/utils/operations.py", line 101, in recursively_apply
+    return func(data, *args, **kwargs)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/utils/operations.py", line 467, in _convert_to_fp32
+    return tensor.float()
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 6.14 GiB (GPU 0; 23.65 GiB total capacity; 17.74 GiB already allocated; 4.69 GiB free; 18.19 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+Traceback (most recent call last):
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/bin/accelerate", line 8, in <module>
+    sys.exit(main())
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/commands/accelerate_cli.py", line 45, in main
+    args.func(args)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/commands/launch.py", line 915, in launch_command
+    simple_launcher(args)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/commands/launch.py", line 578, in simple_launcher
+    raise subprocess.CalledProcessError(returncode=process.returncode, cmd=cmd)
+subprocess.CalledProcessError: Command '['/om2/user/jackking/anaconda/envs/modular_transformers/bin/python', '/om2/user/jackking/modular_transformers/modular_transformers/train/accelerate_train_gpt2.py']' returned non-zero exit status 1.

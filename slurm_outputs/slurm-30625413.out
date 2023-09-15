@@ -1,0 +1,63 @@
+/om2/user/jackking/anaconda/envs/modular_transformers/bin/python
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+wandb: Currently logged in as: jack-g-king. Use `wandb login --relogin` to force relogin
+wandb: Appending key for api.wandb.ai to your netrc file: /home/jackking/.netrc
+Downloading and preparing dataset json/miniBERTa-100M to /home/jackking/.cache/huggingface/datasets/json/miniBERTa-100M-c428575d45cb1e57/0.0.0/0f7e3662623656454fcd2b650f34e886a7db4b9104504885bd462096cc7a9f51...
+Downloading data files:   0%|          | 0/3 [00:00<?, ?it/s]Downloading data files: 100%|██████████| 3/3 [00:00<00:00, 1694.21it/s]
+Extracting data files:   0%|          | 0/3 [00:00<?, ?it/s]Extracting data files:  33%|███▎      | 1/3 [00:04<00:08,  4.50s/it]Extracting data files:  67%|██████▋   | 2/3 [00:07<00:03,  3.49s/it]Extracting data files: 100%|██████████| 3/3 [00:08<00:00,  2.37s/it]Extracting data files: 100%|██████████| 3/3 [00:08<00:00,  2.78s/it]
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 32239 examples [00:00, 86198.32 examples/s]Generating train split: 64636 examples [00:00, 116281.13 examples/s]Generating train split: 131371 examples [00:00, 152271.74 examples/s]Generating train split: 162591 examples [00:01, 173446.29 examples/s]Generating train split: 197257 examples [00:01, 174363.22 examples/s]Generating train split: 225182 examples [00:01, 174750.62 examples/s]Generating train split: 259293 examples [00:01, 152979.40 examples/s]Generating train split: 289002 examples [00:01, 164978.18 examples/s]Generating train split: 321625 examples [00:01, 180734.23 examples/s]Generating train split: 350783 examples [00:02, 181048.98 examples/s]Generating train split: 417573 examples [00:02, 199593.63 examples/s]Generating train split: 451257 examples [00:02, 193445.92 examples/s]Generating train split: 487561 examples [00:02, 186588.76 examples/s]Generating train split: 520041 examples [00:02, 205300.93 examples/s]Generating train split: 552555 examples [00:03, 207393.86 examples/s]Generating train split: 585035 examples [00:03, 228752.44 examples/s]Generating train split: 650829 examples [00:03, 272873.71 examples/s]Generating train split: 684122 examples [00:03, 248061.62 examples/s]Generating train split: 719351 examples [00:03, 230391.62 examples/s]Generating train split: 751641 examples [00:03, 208965.61 examples/s]Generating train split: 783880 examples [00:04, 202240.05 examples/s]Generating train split: 817945 examples [00:04, 212924.73 examples/s]Generating train split: 851344 examples [00:04, 232906.25 examples/s]Generating train split: 884807 examples [00:04, 226595.10 examples/s]Generating train split: 948923 examples [00:04, 213391.63 examples/s]Generating train split: 980338 examples [00:04, 215590.90 examples/s]Generating train split: 1045772 examples [00:05, 188767.65 examples/s]Generating train split: 1076640 examples [00:05, 192259.13 examples/s]Generating train split: 1142958 examples [00:05, 196094.53 examples/s]Generating train split: 1206561 examples [00:06, 234518.27 examples/s]Generating train split: 1240264 examples [00:06, 244677.81 examples/s]Generating train split: 1272815 examples [00:06, 213697.10 examples/s]Generating train split: 1342932 examples [00:07, 152484.85 examples/s]Generating train split: 1410130 examples [00:07, 174927.79 examples/s]Generating train split: 1441663 examples [00:07, 181027.20 examples/s]Generating train split: 1509299 examples [00:07, 214823.40 examples/s]Generating train split: 1550944 examples [00:07, 233757.73 examples/s]Generating train split: 1606634 examples [00:07, 281255.37 examples/s]Generating train split: 1661743 examples [00:08, 315832.51 examples/s]Generating train split: 1714323 examples [00:08, 307213.76 examples/s]Generating train split: 1764231 examples [00:09, 142486.10 examples/s]Generating train split: 1813903 examples [00:09, 178677.60 examples/s]Generating train split: 1867800 examples [00:09, 174657.22 examples/s]Generating train split: 1925621 examples [00:09, 223698.48 examples/s]Generating train split: 1977508 examples [00:09, 233423.41 examples/s]Generating train split: 2033065 examples [00:09, 275544.88 examples/s]Generating train split: 2139934 examples [00:10, 279510.77 examples/s]Generating train split: 2185811 examples [00:10, 276960.96 examples/s]Generating train split: 2240188 examples [00:10, 289017.31 examples/s]Generating train split: 2312593 examples [00:10, 328646.11 examples/s]Generating train split: 2378456 examples [00:10, 378287.53 examples/s]Generating train split: 2442945 examples [00:11, 417023.90 examples/s]Generating train split: 2505536 examples [00:11, 438901.49 examples/s]Generating train split: 2569356 examples [00:11, 472571.74 examples/s]Generating train split: 2631137 examples [00:11, 452362.20 examples/s]Generating train split: 2697927 examples [00:11, 365359.31 examples/s]Generating train split: 2767915 examples [00:11, 393453.69 examples/s]Generating train split: 2832909 examples [00:12, 365459.45 examples/s]Generating train split: 2899853 examples [00:12, 412273.05 examples/s]Generating train split: 2964476 examples [00:12, 453433.83 examples/s]Generating train split: 3031995 examples [00:12, 494354.90 examples/s]Generating train split: 3098299 examples [00:12, 523167.23 examples/s]Generating train split: 3165161 examples [00:12, 510405.54 examples/s]Generating train split: 3229277 examples [00:12, 501968.67 examples/s]Generating train split: 3293008 examples [00:12, 502420.86 examples/s]Generating train split: 3356994 examples [00:12, 518471.51 examples/s]Generating train split: 3423312 examples [00:13, 545002.54 examples/s]Generating train split: 3486915 examples [00:13, 540432.65 examples/s]Generating train split: 3553169 examples [00:13, 551413.07 examples/s]Generating train split: 3623286 examples [00:14, 186832.07 examples/s]Generating train split: 3690484 examples [00:14, 230986.81 examples/s]Generating train split: 3755159 examples [00:14, 269767.50 examples/s]Generating train split: 3831298 examples [00:14, 316051.19 examples/s]Generating train split: 3942097 examples [00:14, 422905.95 examples/s]Generating train split: 4044585 examples [00:14, 514974.89 examples/s]Generating train split: 4148154 examples [00:15, 600902.99 examples/s]Generating train split: 4257862 examples [00:15, 691572.94 examples/s]Generating train split: 4365360 examples [00:15, 756248.16 examples/s]Generating train split: 4466165 examples [00:15, 796869.92 examples/s]Failed to read file '/nese/mit/group/evlab/u/Shared/llm_dataset/miniBERTa/miniBERTa-100M/proc_data_train_for_100M.raw' with error <class 'pyarrow.lib.ArrowInvalid'>: JSON parse error: Invalid value. in row 0
+Generating train split: 4560708 examples [00:26, 27634.55 examples/s]                                                                      Traceback (most recent call last):
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/packaged_modules/json/json.py", line 152, in _generate_tables
+    dataset = json.load(f)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/json/__init__.py", line 293, in load
+    return loads(fp.read(),
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/json/__init__.py", line 357, in loads
+    return _default_decoder.decode(s)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/builder.py", line 1860, in _prepare_split_single
+    for _, table in generator:
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/packaged_modules/json/json.py", line 155, in _generate_tables
+    raise e
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/packaged_modules/json/json.py", line 131, in _generate_tables
+    pa_table = paj.read_json(
+  File "pyarrow/_json.pyx", line 259, in pyarrow._json.read_json
+  File "pyarrow/error.pxi", line 144, in pyarrow.lib.pyarrow_internal_check_status
+  File "pyarrow/error.pxi", line 100, in pyarrow.lib.check_status
+pyarrow.lib.ArrowInvalid: JSON parse error: Invalid value. in row 0
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/om2/user/jackking/modular_transformers/modular_transformers/train/accelerate_train_gpt2.py", line 77, in <module>
+    mini_dataset = load_dataset('/nese/mit/group/evlab/u/Shared/llm_dataset/miniBERTa/miniBERTa-100M')
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/load.py", line 1782, in load_dataset
+    builder_instance.download_and_prepare(
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/builder.py", line 872, in download_and_prepare
+    self._download_and_prepare(
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/builder.py", line 967, in _download_and_prepare
+    self._prepare_split(split_generator, **prepare_split_kwargs)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/builder.py", line 1749, in _prepare_split
+    for job_id, done, content in self._prepare_split_single(
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/datasets/builder.py", line 1892, in _prepare_split_single
+    raise DatasetGenerationError("An error occurred while generating the dataset") from e
+datasets.builder.DatasetGenerationError: An error occurred while generating the dataset
+Traceback (most recent call last):
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/bin/accelerate", line 8, in <module>
+    sys.exit(main())
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/commands/accelerate_cli.py", line 45, in main
+    args.func(args)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/commands/launch.py", line 915, in launch_command
+    simple_launcher(args)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/commands/launch.py", line 578, in simple_launcher
+    raise subprocess.CalledProcessError(returncode=process.returncode, cmd=cmd)
+subprocess.CalledProcessError: Command '['/om2/user/jackking/anaconda/envs/modular_transformers/bin/python', '/om2/user/jackking/modular_transformers/modular_transformers/train/accelerate_train_gpt2.py']' returned non-zero exit status 1.

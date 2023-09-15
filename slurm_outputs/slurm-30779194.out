@@ -1,0 +1,17 @@
+/om2/user/jackking/anaconda/envs/modular_transformers/bin/python
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+wandb: Currently logged in as: jack-g-king. Use `wandb login --relogin` to force relogin
+wandb: Appending key for api.wandb.ai to your netrc file: /home/jackking/.netrc
+wandb: wandb version 0.15.3 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.14.0
+wandb: Run data is saved locally in /net/vast-storage/scratch/vast/evlab/jackking/modular_transformers/slurm_outputs/wandb/run-20230521_153059-nbgwzfq8
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run fearless-music-48
+wandb: ⭐️ View project at https://wandb.ai/jack-g-king/mt_gpt2
+wandb: 🚀 View run at https://wandb.ai/jack-g-king/mt_gpt2/runs/nbgwzfq8
+768-768-128-768-768 size: 108.5M parameters
+  0%|          | 0/10 [00:00<?, ?it/s]
+  0%|          | 0/4348 [00:00<?, ?it/s][Aslurmstepd: error: *** JOB 30779194 ON node103 CANCELLED AT 2023-05-21T15:31:14 ***

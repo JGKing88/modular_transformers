@@ -1,0 +1,22 @@
+/om2/user/jackking/anaconda/envs/modular_transformers/bin/python
+The following values were not passed to `accelerate launch` and had defaults used instead:
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+wandb: Currently logged in as: jack-g-king (modular_transformers). Use `wandb login --relogin` to force relogin
+wandb: Appending key for api.wandb.ai to your netrc file: /home/jackking/.netrc
+Traceback (most recent call last):
+  File "/om2/user/jackking/modular_transformers/modular_transformers/train/accelerate_train_gpt2.py", line 115, in <module>
+    accelerator.init_trackers("curvature_testing", config=train_config, name=model_name)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/accelerator.py", line 532, in _inner
+    return PartialState().on_main_process(function)(*args, **kwargs)
+TypeError: init_trackers() got an unexpected keyword argument 'name'
+Traceback (most recent call last):
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/bin/accelerate", line 8, in <module>
+    sys.exit(main())
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/commands/accelerate_cli.py", line 45, in main
+    args.func(args)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/commands/launch.py", line 915, in launch_command
+    simple_launcher(args)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/commands/launch.py", line 578, in simple_launcher
+    raise subprocess.CalledProcessError(returncode=process.returncode, cmd=cmd)
+subprocess.CalledProcessError: Command '['/om2/user/jackking/anaconda/envs/modular_transformers/bin/python', '/om2/user/jackking/modular_transformers/modular_transformers/train/accelerate_train_gpt2.py']' returned non-zero exit status 1.
