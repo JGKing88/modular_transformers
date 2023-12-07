@@ -135,6 +135,8 @@ dmypy.json
 
 #logging
 wandb/
+slurm_outputs/
 
 #data
 miniberta_datasets/
+activations/

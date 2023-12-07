@@ -2,10 +2,13 @@ import transformers
 import torch
 import torch.nn as nn 
 from transformers.models.gpt2.modeling_gpt2 import GPT2Attention, GPT2MLP
+from transformers.activations import ACT2FN
+from transformers.pytorch_utils import Conv1D
+
 from typing import Optional, Tuple, Union
 
 class Transformer(transformers.GPT2Model):
-    def __init__(self, config):
+    def __init__(self, config=None):
         super().__init__(config)
         self.h = nn.ModuleList()
         self.hook_functions = {}
@@ -13,7 +16,9 @@ class Transformer(transformers.GPT2Model):
 
         for layer in range(config.n_layer):
             #each block gets a new GPT2Config object
-
+            #each block needs an output dimension to be given to 
+            #it's dimension changer final layers
+            #the last block needs to return the embedding dimension to the original size
             if layer == config.n_layer - 1:
                 output_dim = config.n_embd
             else:
@@ -36,21 +41,26 @@ class Transformer(transformers.GPT2Model):
                 #all you get in a hook is the module, inputs, and outputs. So the only way to link a module
                 #to a loss function is to use a dictionary
                 self.hook_functions[attention] = self.config.loss_hooks[layer]
+                self.hook_losses[attention] = 0
         
     def record_extra_loss(self, module, inputs, output):
         loss = self.hook_functions[module](inputs)
-        self.hook_losses[module] = loss
+        self.hook_losses[module] += loss
         #if you want to backpropagate the loss from here, uncomment the following line
         #loss.backward()
 
     def output_extra_losses(self):
         intm_dict = self.hook_losses.copy() #so that we can clear the dict
-        self.hook_losses = {}
+        for key in self.hook_losses.keys():
+            self.hook_losses[key] = 0
         return intm_dict
 
-
+"""
+An exact replica of the hugging face GPT2Block except of the final embedding size
+shifter layer
+"""
 class TransformerBlock(nn.Module):
-    def __init__(self, config, layer_idx=None):
+    def __init__(self, config=None, layer_idx=None):
         super().__init__()
         hidden_size = config.hidden_size
         inner_dim = config.n_inner if config.n_inner is not None else 4 * hidden_size
@@ -65,7 +75,10 @@ class TransformerBlock(nn.Module):
 
         self.mlp = GPT2MLP(inner_dim, config)
         
-        self.dim_changer = nn.Linear(hidden_size, config.output_dim)
+        #MY ADDITION, NEED TO CHANGE THE EMBEDDING SIZE
+        self.dim_changer = nn.Linear(hidden_size, config.output_dim, bias=False)
+        for param in self.dim_changer.parameters():
+            param.requires_grad = False
 
     def forward(
         self,
@@ -120,7 +133,7 @@ class TransformerBlock(nn.Module):
         feed_forward_hidden_states = self.mlp(hidden_states)
         # residual connection
         hidden_states = residual + feed_forward_hidden_states
-        hidden_states = self.dim_changer(hidden_states)
+        hidden_states = self.dim_changer(hidden_states) #MY ADDITION
 
         if use_cache:
             outputs = (hidden_states,) + outputs
@@ -128,9 +141,11 @@ class TransformerBlock(nn.Module):
             outputs = (hidden_states,) + outputs[1:]
 
         return outputs  # hidden_states, present, (attentions, cross_attentions)
+    
+
 
 class LM(transformers.GPT2LMHeadModel):
-    def __init__(self, config):
+    def __init__(self, config=None):
         super().__init__(config)
         self.transformer = Transformer(config)
 

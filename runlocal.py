@@ -18,17 +18,25 @@ if __name__ == '__main__':
                      'eos_token_id': tokenizer.eos_token_id}
     config = GPT2Config(override_vars)
     model = components.LM(config)
+    print(model)
     device = 'cpu'
     model = model.to(device)
 
-    inputs = tokenizer.encode("Hello, my dog is cute", return_tensors="pt")
-    inputs = inputs.to(device)
+    sentence = tokenizer.encode("Hello, my dog is cute", return_tensors="pt")
+    inputs = sentence[:-1]
+    # labels = sentence[1:]
+    # inputs = inputs.to(device)
+    # outputs = model(inputs, labels=labels)
+    # loss = outputs.loss
+    # print(loss)
+
+    # extra_losses = model.output_extra_losses()
+    # for extra_loss in extra_losses.values():
+    #     if extra_loss is not None:
+    #         loss += extra_loss
+    # print(loss)
+
     outputs = model(inputs)
-    # print(outputs.logits.type())
-    # torch.set_printoptions(threshold=10000)
-    # print(outputs.logits[0][0])
-    # print(outputs.logits[0][0].size())
-    # print(tokenizer.convert_tokens_to_string(tokenizer.convert_ids_to_tokens(outputs.logits[0][0])))
     logits = outputs.logits[:, -1, :]
     # apply softmax to convert logits to (normalized) probabilities
     probs = F.softmax(logits, dim=-1)

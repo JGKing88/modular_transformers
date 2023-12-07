@@ -25,6 +25,7 @@ import pickle
 from modular_transformers.models.gpt2.configuration_gpt2 import GPT2Config
 from modular_transformers.models import components
 
+import wandb
 """
 Basic script to train a distill-gpt2 model using accelerate and grouping function.
 Set config to use DeepSpeed
@@ -32,12 +33,13 @@ Set config to use DeepSpeed
 'accelerate launch bplm/basic_accelerate_addedAug2022.py'
 """
 
-MAX_GPU_BATCH_SIZE = 8
-EVAL_BATCH_SIZE = 1
+MAX_GPU_BATCH_SIZE = 32
+EVAL_BATCH_SIZE = 32
 CONTEXT_LENGTH = 1024
 
+
 # Evaluate function
-def evaluate():
+def evaluate(model, eval_dataloader, accelerator):
     model.eval()
     losses = []
     for step, batch in tqdm(enumerate(eval_dataloader), total=len(eval_dataloader)):
@@ -53,72 +55,77 @@ def evaluate():
     accelerator.print(f"validation loss: {loss.item()}, validation perplexity {perplexity.item()}")
     return loss.item(), perplexity.item()
 
-if __name__ == "__main__":
-    # run_name='gaussian_init_1'
-    run_name = "test"
-    model_name='gpt2'
-    data='10M'
-    batch_size = 1
-    #chkpoint=43750
+def main():
+    wandb.login(key="a338f755915cccd861b14f29bf68601d8e1ec2c9")
+    data='100M'
+    batch_size = 64
+
+    # chkpoint= 52000
+    wandb_id = "amvcstc4"
+    epoch_buffer = 12
+
     chkpoint = None
-    train_config = {"lr": 0.0006, "num_epochs": 1, "correct_bias": True, "seed": 42, "batch_size": batch_size}
+
+    #Set training config --------------------------------------------
+
+    train_config = {"lr": 0.0006, "num_epochs": 50, "correct_bias": True, "seed": 42, "batch_size": batch_size}
     tokenizer = AutoTokenizer.from_pretrained("gpt2", fast=False)
     tokenizer.pad_token = tokenizer.eos_token
+
+    path = '/om/weka/evlab/ehoseini/MyData/miniBERTa_v2/'
     grouped_pad_train = load_from_disk(
-        os.path.join('/om/user/ehoseini/MyData/miniBERTa_v2/', f'miniBERTa-{data}-crunched',
+        os.path.join(path, f'miniBERTa-{data}-crunched',
                      f'train_context_len_{CONTEXT_LENGTH}'))
-    grouped_pad_test = load_from_disk(
-        os.path.join('/om/user/ehoseini/MyData/miniBERTa_v2/', f'miniBERTa-{data}-crunched',
-                     f'test_context_len_{CONTEXT_LENGTH}'))
     grouped_pad_valid = load_from_disk(
-        os.path.join('/om/user/ehoseini/MyData/miniBERTa_v2/', f'miniBERTa-{data}-crunched',
+        os.path.join(path, f'miniBERTa-{data}-crunched',
                      f'valid_context_len_{CONTEXT_LENGTH}'))
 
     # If the batch size is too big we use gradient accumulation
-    gradient_accumulation_steps = 8
+    gradient_accumulation_steps = 1
     if train_config['batch_size'] > MAX_GPU_BATCH_SIZE:
         gradient_accumulation_steps = train_config['batch_size'] // MAX_GPU_BATCH_SIZE
         batch_size = MAX_GPU_BATCH_SIZE
-    accelerator = Accelerator(log_with="wandb",gradient_accumulation_steps=gradient_accumulation_steps)
+        accelerator = Accelerator(log_with="wandb",gradient_accumulation_steps=gradient_accumulation_steps)
+    else:
+        accelerator = Accelerator(log_with="wandb")
 
     eval_dataloader = DataLoader(grouped_pad_valid, shuffle=False, batch_size=EVAL_BATCH_SIZE)
-    test_dataloader = DataLoader(grouped_pad_test, shuffle=True, batch_size=EVAL_BATCH_SIZE)
     train_dataloader = DataLoader(grouped_pad_train, shuffle=True, batch_size=batch_size)
-    del grouped_pad_train, grouped_pad_valid, grouped_pad_test
+    del grouped_pad_train, grouped_pad_valid
 
-    # Logging initialization
-    # Change name test to log to different project
-    accelerator.init_trackers("bplm_gpt2", config=train_config,init_kwargs={'name':run_name})
+    #set model config ---------------------------------------
+    bottleneck_dim = 768
+    n_layer = 3
 
-    #model level config is set in configuration.py
-    #train level config is set here
-    override_vars = {'vocab_size': len(tokenizer), 'n_ctx': CONTEXT_LENGTH, 'bos_token_id': tokenizer.bos_token_id,
-                     'eos_token_id': tokenizer.eos_token_id}
-    config = GPT2Config(override_vars)
+    config = {'vocab_size': len(tokenizer), 'n_ctx': CONTEXT_LENGTH, 'bos_token_id': tokenizer.bos_token_id,
+                     'eos_token_id': tokenizer.eos_token_id, "bottleneck": bottleneck_dim, "n_layer": n_layer}
+    config = GPT2Config(config)
     model = components.LM(config)
 
-    # config = AutoConfig.from_pretrained(model_name,vocab_size=len(tokenizer),n_ctx=CONTEXT_LENGTH,bos_token_id=tokenizer.bos_token_id,eos_token_id=tokenizer.eos_token_id)
-    # model = AutoModelForCausalLM.from_config(config)
-    # if 'gaussian' in run_name:
-    #     state_dict = initialize_gpt2_weights(model, permute=False)
-    # else:
-    #     state_dict=model.state_dict()
-    # if chkpoint is not None:
-    #     save_dir = Path(
-    #         f'/om2/user/ehoseini/MyData/bplm/miniberta_{data}/{model_name}/{run_name}/checkpoint_{chkpoint}')
-    #     chkpnt_model=AutoModelForCausalLM.from_pretrained(save_dir)
-    #     state_dict=chkpnt_model.state_dict()
-    # # check if there is a previous run
-    # model = AutoModelForCausalLM.from_pretrained(model_name, config=config, state_dict=state_dict)
-    # #state_dict=None
+    run_name = "reg_loss"
+    model_name = ""
+    for layer in config.n_embds:
+        model_name += f"{layer}-"
+    model_name = model_name[:-1]
 
-    # del state_dict
-
+    train_config.update(config.get())    
     
+    if chkpoint is not None:
+        save_dir = Path(f'/om2/user/jackking/MyData/mt/miniberta_{data}/{model_name}/{run_name}/checkpoint_{chkpoint}')
+        model = components.LM.from_pretrained(save_dir)
+        accelerator.init_trackers("curvature_testing", init_kwargs={"wandb": {"id": wandb_id, "resume": "must"}})
+        api = wandb.Api()
+        run = api.run(f"modular_transformers/curvature_testing/{wandb_id}")
+        run.config["num_epochs"] = epoch_buffer + train_config["num_epochs"]
+        run.update()
+    else:
+        accelerator.init_trackers("curvature_testing", config=train_config, init_kwargs={"wandb": {"name": model_name}})
+
     torch.cuda.empty_cache()
     model.output_loss = True
     model_size = sum(t.numel() for t in model.parameters())
     print(f"{model_name} size: {model_size / 1000 ** 2:.1f}M parameters")
+    print(model)
     model = model.to(accelerator.device)
 
     # Define optimizer
@@ -136,7 +143,7 @@ if __name__ == "__main__":
         lr_scheduler = get_cosine_schedule_with_warmup(
             optimizer=optimizer,
             num_warmup_steps=100,
-            num_training_steps=(len(train_dataloader) * train_config['num_epochs']) // gradient_accumulation_steps,
+            num_training_steps=(len(train_dataloader) * train_config['num_epochs']),
         )
     else:
         assert False
@@ -146,50 +153,69 @@ if __name__ == "__main__":
         model, optimizer, train_dataloader, eval_dataloader, lr_scheduler)
 
     # Logging variables
-    batch_count = 0
-    n_steps_per_epoch = math.ceil(len(train_dataloader.dataset) / train_config['batch_size'])
+    n_steps_per_epoch = math.ceil(len(train_dataloader.dataset) / batch_size)
+    data_count = 0
+    absolute_step = 0
     # Begin training for number of epochs
-    abs_step=0
+
     for epoch in tqdm(range(train_config['num_epochs'])):
         model.train()
         torch.cuda.empty_cache()
         for step, batch in tqdm(enumerate(train_dataloader), total=len(train_dataloader)):
             batch = [torch.stack(batch[x]).transpose(1, 0) for x in ['input_ids', 'attention_mask']]
-            total_loss=0
+
             with accelerator.accumulate(model):
                 outputs = model(batch[0], labels=batch[0], attention_mask=batch[1])
                 loss = outputs.loss
-                total_loss+=loss
+
+                #dealing with extra losses. can change by case
+                #can not do this here and instead backpropagate from the middle (in components.py)
+
+                # extra_losses = model.output_extra_losses()
+                # for extra_loss in extra_losses.values():
+                #     if extra_loss is not None:
+                #         loss += extra_loss
+                                                                
                 accelerator.backward(loss)
                 lr_scheduler.step()
                 optimizer.step()
                 optimizer.zero_grad()
-            batch_count += len(batch)
-            accelerator.log({"training_loss": total_loss}, step=abs_step)
-            accelerator.log({"train/train_loss": total_loss}, step=abs_step)
-            accelerator.log({"train/epoch": (step + 1 + (n_steps_per_epoch * epoch)) / n_steps_per_epoch},
-                            step=abs_step)
-            accelerator.log({"train/batch_count": batch_count}, step=abs_step)
-            if abs_step % 500 == 0:
+
+            data_count += batch[0].shape[0]
+
+            absolute_step += 1
+
+            accelerator.log({"train/train_loss": loss}, step=absolute_step)
+            accelerator.log({"train/epoch": (absolute_step + 1) / n_steps_per_epoch},
+                            step=absolute_step)
+            accelerator.log({"train/data_count": data_count}, step=absolute_step)
+            accelerator.log({"train/learning_rate": lr_scheduler.get_last_lr()[0]}, step=absolute_step)
+
+            if absolute_step % 200 == 0:
                 model.eval()
                 with torch.no_grad():
-                    valid_loss, valid_accuracy = evaluate()
-                accelerator.log({"validation/valid_loss": valid_loss}, step=abs_step)
-                accelerator.log({"validation/valid_accuracy": valid_accuracy}, step=abs_step)
-                # save_dir = Path(
-                #     f'/om2/user/ehoseini/MyData/bplm/miniberta_{data}/{model_name}/{run_name}/checkpoint_{abs_step}')
-                # save_dir.mkdir(parents=True, exist_ok=True)
-                # accelerator.wait_for_everyone()
-                # unwrapped_model = accelerator.unwrap_model(model)
-                # unwrapped_model.save_pretrained(save_dir, save_function=accelerator.save,
-                #                                 state_dict=accelerator.get_state_dict(model))
-                # accelerator.save(
-                #     {
-                #         "epoch": epoch,"steps": abs_step,"optimizer": optimizer.state_dict(),
-                #         "scheduler": lr_scheduler.state_dict(),
-                #     },os.path.join(save_dir,'accelerator_states'))
+                    valid_loss, valid_accuracy = evaluate(model, eval_dataloader, accelerator)
+                accelerator.log({"validation/valid_loss": valid_loss}, step=absolute_step)
+                accelerator.log({"validation/valid_accuracy": valid_accuracy}, step=absolute_step)
                 model.train()
                 torch.cuda.empty_cache()
-            abs_step+=1
+            
+            if absolute_step % 2000 == 0:
+                save_dir = Path(
+                    f'/om2/user/jackking/MyData/mt/miniberta_{data}/{model_name}/{run_name}/checkpoint_{absolute_step}')
+                save_dir.mkdir(parents=True, exist_ok=True)
+                accelerator.wait_for_everyone()
+                unwrapped_model = accelerator.unwrap_model(model)
+                unwrapped_model.save_pretrained(save_dir, is_main_process=accelerator.is_main_process, save_function=accelerator.save,state_dict=accelerator.get_state_dict(model))
+                accelerator.save(
+                    {
+                        "epoch": epoch,"steps": step,"optimizer": optimizer.state_dict(),
+                        "scheduler": lr_scheduler.state_dict(),
+                    },os.path.join(save_dir,'accelerator_states'))
+                
     accelerator.end_training()
     torch.cuda.empty_cache()
+
+
+if __name__ == "__main__":
+    main()
