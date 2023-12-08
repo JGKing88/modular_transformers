@@ -47,3 +47,11 @@
 [W 2023-12-07 13:56:30.198 ServerApp] 404 GET /hub/api (@172.16.24.234) 7.42ms referer=None
 [I 2023-12-07 13:56:30.256 JupyterNotebookApp] 302 GET /tree? (@172.16.24.234) 0.61ms
 [I 2023-12-07 13:56:30.853 ServerApp] Connecting to kernel 2d1e84f3-55e3-4ab2-8983-bddba3653c37.
+[I 2023-12-07 14:08:29.595 ServerApp] Kernel restarted: 2d1e84f3-55e3-4ab2-8983-bddba3653c37
+[I 2023-12-07 14:08:29.602 ServerApp] Starting buffering for 2d1e84f3-55e3-4ab2-8983-bddba3653c37:523cd033-6de4-4eff-991d-1d20ca73703a
+[I 2023-12-07 14:08:29.646 ServerApp] Connecting to kernel 2d1e84f3-55e3-4ab2-8983-bddba3653c37.
+[I 2023-12-07 14:08:29.646 ServerApp] Restoring connection for 2d1e84f3-55e3-4ab2-8983-bddba3653c37:523cd033-6de4-4eff-991d-1d20ca73703a
+[I 2023-12-07 14:26:45.716 ServerApp] Starting buffering for 2d1e84f3-55e3-4ab2-8983-bddba3653c37:523cd033-6de4-4eff-991d-1d20ca73703a
+[W 2023-12-07 23:13:22.165 ServerApp] 404 GET /hub/api (@172.16.24.234) 16.02ms referer=None
+[I 2023-12-07 23:13:22.287 JupyterNotebookApp] 302 GET /tree? (@172.16.24.234) 0.71ms
+[I 2023-12-07 23:13:23.341 ServerApp] Connecting to kernel 2d1e84f3-55e3-4ab2-8983-bddba3653c37.
