@@ -1,0 +1,43 @@
+,bigram,0,1,2,3,4,5,6,7,8,9,10,11
+0,bed and, a, you,",", the, a, a, a, the, a, the, a, the
+1,bread and, the, the,S, other, a, other, other, the, a, a, other, other
+2,salt and, the, black, I, salt, the, salt, salt, the, salt, salt, the, other
+3,thunder and, the, we, the, the, the, the, the, the, the, the, the, the
+4,social media,.,"""", and,"""","""",",",",","""",",","""","""",""""
+5,credit card,., and,",",),",",),),",",),),),)
+6,climate change,.,",",",",",",.,.,.,.,",",.,.,.
+7,artifical intelligence,.,",",-,",",.,",",.,.,",",.,.,.
+8,global warming,.,",", and,.,.,.,.,.,.,.,",",.
+9,state of, the, the, of, the, the, the, the, the, the, the, the, the
+10,fast food,",", company, are,",",",",",",",", and,.,",",., and
+11,rising sea,.,",",",",-, level, of,., of, of, of, of,","
+12,University of, the, the, the, California, California, California, California, Toronto, California, Pennsylvania, Texas, Pennsylvania
+13,We will, be, be,Ge, be, not, not, not, be, not, be, be, continue
+14,Do you, know, have, or, have, think, have, think, have, think, know, have, have
+15,When you,'re, want, is,'re,'re,'re,'re,'re,'re,'re,'re, look
+16,did not, be, be, being, have, have, have, have, have, have, have, have, have
+17,You can,'t,'t,",",'t,'t,'t, see, also,'t, also, see,'t
+18,You may, not, not, be, be, also, have, have, have, be, also, not, be
+19,He was, a, a," """, a, a, a, a, a, a, a, not, a
+20,If you,'re, are, are,'re,'re, are,'re, are,'re,'re, are, have
+21,when they, are, were, to,'re, are, are, are,'re,'re, are, are,'re
+22,be in, the, the, is, the, the, the, the, the, the, the, the, the
+23,the end, of, of,-, of, of, of, of, of, of, of, of, of
+24,the past,),",", the,",", few,",", few,",",",", few,",", few
+25,each other,.,",", their,.,.,",",",",),),),'s,)
+26,and there,'s, was, are, is,'s,'s,'s,'s,'s,'s,'s,'s
+27,on all, the, all, the, the, the, the, the, the, the, the, the, the
+28,the form, of, of, would, of, of, of, of, of, of, of, of, of
+29,in all, of, the,-,",", the,",", the, the, the, of, the, the
+30,years ago,",","
+",",",.,.,",",",",.,.,.,",",","
+31,for example,",",",", if,",",",",",",",",",",",",",",",",","
+32,to top, the,"""",—, of, it, of, of, of, it, it, of, of
+33,and on, the, the, the, the, the, the, the, the, the, the, the, the
+34,as well, as, as, not, as, as, as, as, as, as, as, as, as
+35,to all, the,-," """,",", of,., the, of, the, the,., the
+36,as possible, to,., to,.,.,.,.,.,.,.,",",.
+37,a member,., of, of, of, of, of, of, of, of, of, of, of
+38,more info, on,"
+",-,],), about,],],"
+",:, on,)

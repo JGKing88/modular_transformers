@@ -1,0 +1,133 @@
+,name,model,pca_dim,pertubation_func,num_layers
+0,no_pc_normal_1,gpt2,1,"    ""no_pc_normal"": lambda pc: torch.normal(mean=0, std=0.1, size=pc.shape),
+",12
+1,orthogonal_1,gpt2,1,"    ""orthogonal"": lambda pc: torch.tensor(get_orthogonal_vector(pc)),
+",12
+2,orthogonal_10_1,gpt2,1,"    ""orthogonal_10"": lambda pc: 10 * torch.tensor(get_orthogonal_vector(pc)),
+",12
+3,orthogonal_normal_1,gpt2,1,"    ""orthogonal_normal"": lambda pc: torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(get_orthogonal_vector(pc)),
+",12
+4,orthogonal_10_normal_1,gpt2,1,"    ""orthogonal_10_normal"": lambda pc: 10 * torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(get_orthogonal_vector(pc)),
+",12
+5,negative_1,gpt2,1,"    ""negative"": lambda pc: -torch.tensor(pc),
+",12
+6,negative_normal_1,gpt2,1,"    ""negative_normal"": lambda pc: -torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(pc),
+",12
+7,pc_1,gpt2,1,"    ""pc"": lambda pc: torch.tensor(pc),
+",12
+8,pc_normal_1,gpt2,1,"    ""pc_normal"": lambda pc: torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(pc),
+",12
+9,pc_10_1,gpt2,1,"    ""pc_10"": lambda pc: 10 * torch.tensor(pc),
+",12
+10,pc_10_normal_1,gpt2,1,"    ""pc_10_normal"": lambda pc: 10 * torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(pc),
+",12
+11,no_pc_normal_2,gpt2,2,"    ""no_pc_normal"": lambda pc: torch.normal(mean=0, std=0.1, size=pc.shape),
+",12
+12,orthogonal_2,gpt2,2,"    ""orthogonal"": lambda pc: torch.tensor(get_orthogonal_vector(pc)),
+",12
+13,orthogonal_10_2,gpt2,2,"    ""orthogonal_10"": lambda pc: 10 * torch.tensor(get_orthogonal_vector(pc)),
+",12
+14,orthogonal_normal_2,gpt2,2,"    ""orthogonal_normal"": lambda pc: torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(get_orthogonal_vector(pc)),
+",12
+15,orthogonal_10_normal_2,gpt2,2,"    ""orthogonal_10_normal"": lambda pc: 10 * torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(get_orthogonal_vector(pc)),
+",12
+16,negative_2,gpt2,2,"    ""negative"": lambda pc: -torch.tensor(pc),
+",12
+17,negative_normal_2,gpt2,2,"    ""negative_normal"": lambda pc: -torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(pc),
+",12
+18,pc_2,gpt2,2,"    ""pc"": lambda pc: torch.tensor(pc),
+",12
+19,pc_normal_2,gpt2,2,"    ""pc_normal"": lambda pc: torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(pc),
+",12
+20,pc_10_2,gpt2,2,"    ""pc_10"": lambda pc: 10 * torch.tensor(pc),
+",12
+21,pc_10_normal_2,gpt2,2,"    ""pc_10_normal"": lambda pc: 10 * torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(pc),
+",12
+22,no_pc_normal_3,gpt2,3,"    ""no_pc_normal"": lambda pc: torch.normal(mean=0, std=0.1, size=pc.shape),
+",12
+23,orthogonal_3,gpt2,3,"    ""orthogonal"": lambda pc: torch.tensor(get_orthogonal_vector(pc)),
+",12
+24,orthogonal_10_3,gpt2,3,"    ""orthogonal_10"": lambda pc: 10 * torch.tensor(get_orthogonal_vector(pc)),
+",12
+25,orthogonal_normal_3,gpt2,3,"    ""orthogonal_normal"": lambda pc: torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(get_orthogonal_vector(pc)),
+",12
+26,orthogonal_10_normal_3,gpt2,3,"    ""orthogonal_10_normal"": lambda pc: 10 * torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(get_orthogonal_vector(pc)),
+",12
+27,negative_3,gpt2,3,"    ""negative"": lambda pc: -torch.tensor(pc),
+",12
+28,negative_normal_3,gpt2,3,"    ""negative_normal"": lambda pc: -torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(pc),
+",12
+29,pc_3,gpt2,3,"    ""pc"": lambda pc: torch.tensor(pc),
+",12
+30,pc_normal_3,gpt2,3,"    ""pc_normal"": lambda pc: torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(pc),
+",12
+31,pc_10_3,gpt2,3,"    ""pc_10"": lambda pc: 10 * torch.tensor(pc),
+",12
+32,pc_10_normal_3,gpt2,3,"    ""pc_10_normal"": lambda pc: 10 * torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(pc),
+",12
+33,no_pc_normal_5,gpt2,5,"    ""no_pc_normal"": lambda pc: torch.normal(mean=0, std=0.1, size=pc.shape),
+",12
+34,orthogonal_5,gpt2,5,"    ""orthogonal"": lambda pc: torch.tensor(get_orthogonal_vector(pc)),
+",12
+35,orthogonal_10_5,gpt2,5,"    ""orthogonal_10"": lambda pc: 10 * torch.tensor(get_orthogonal_vector(pc)),
+",12
+36,orthogonal_normal_5,gpt2,5,"    ""orthogonal_normal"": lambda pc: torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(get_orthogonal_vector(pc)),
+",12
+37,orthogonal_10_normal_5,gpt2,5,"    ""orthogonal_10_normal"": lambda pc: 10 * torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(get_orthogonal_vector(pc)),
+",12
+38,negative_5,gpt2,5,"    ""negative"": lambda pc: -torch.tensor(pc),
+",12
+39,negative_normal_5,gpt2,5,"    ""negative_normal"": lambda pc: -torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(pc),
+",12
+40,pc_5,gpt2,5,"    ""pc"": lambda pc: torch.tensor(pc),
+",12
+41,pc_normal_5,gpt2,5,"    ""pc_normal"": lambda pc: torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(pc),
+",12
+42,pc_10_5,gpt2,5,"    ""pc_10"": lambda pc: 10 * torch.tensor(pc),
+",12
+43,pc_10_normal_5,gpt2,5,"    ""pc_10_normal"": lambda pc: 10 * torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(pc),
+",12
+44,no_pc_normal_10,gpt2,10,"    ""no_pc_normal"": lambda pc: torch.normal(mean=0, std=0.1, size=pc.shape),
+",12
+45,orthogonal_10,gpt2,10,"    ""orthogonal"": lambda pc: torch.tensor(get_orthogonal_vector(pc)),
+",12
+46,orthogonal_10_10,gpt2,10,"    ""orthogonal_10"": lambda pc: 10 * torch.tensor(get_orthogonal_vector(pc)),
+",12
+47,orthogonal_normal_10,gpt2,10,"    ""orthogonal_normal"": lambda pc: torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(get_orthogonal_vector(pc)),
+",12
+48,orthogonal_10_normal_10,gpt2,10,"    ""orthogonal_10_normal"": lambda pc: 10 * torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(get_orthogonal_vector(pc)),
+",12
+49,negative_10,gpt2,10,"    ""negative"": lambda pc: -torch.tensor(pc),
+",12
+50,negative_normal_10,gpt2,10,"    ""negative_normal"": lambda pc: -torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(pc),
+",12
+51,pc_10,gpt2,10,"    ""pc"": lambda pc: torch.tensor(pc),
+",12
+52,pc_normal_10,gpt2,10,"    ""pc_normal"": lambda pc: torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(pc),
+",12
+53,pc_10_10,gpt2,10,"    ""pc_10"": lambda pc: 10 * torch.tensor(pc),
+",12
+54,pc_10_normal_10,gpt2,10,"    ""pc_10_normal"": lambda pc: 10 * torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(pc),
+",12
+55,no_pc_normal_50,gpt2,50,"    ""no_pc_normal"": lambda pc: torch.normal(mean=0, std=0.1, size=pc.shape),
+",12
+56,orthogonal_50,gpt2,50,"    ""orthogonal"": lambda pc: torch.tensor(get_orthogonal_vector(pc)),
+",12
+57,orthogonal_10_50,gpt2,50,"    ""orthogonal_10"": lambda pc: 10 * torch.tensor(get_orthogonal_vector(pc)),
+",12
+58,orthogonal_normal_50,gpt2,50,"    ""orthogonal_normal"": lambda pc: torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(get_orthogonal_vector(pc)),
+",12
+59,orthogonal_10_normal_50,gpt2,50,"    ""orthogonal_10_normal"": lambda pc: 10 * torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(get_orthogonal_vector(pc)),
+",12
+60,negative_50,gpt2,50,"    ""negative"": lambda pc: -torch.tensor(pc),
+",12
+61,negative_normal_50,gpt2,50,"    ""negative_normal"": lambda pc: -torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(pc),
+",12
+62,pc_50,gpt2,50,"    ""pc"": lambda pc: torch.tensor(pc),
+",12
+63,pc_normal_50,gpt2,50,"    ""pc_normal"": lambda pc: torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(pc),
+",12
+64,pc_10_50,gpt2,50,"    ""pc_10"": lambda pc: 10 * torch.tensor(pc),
+",12
+65,pc_10_normal_50,gpt2,50,"    ""pc_10_normal"": lambda pc: 10 * torch.normal(mean=0, std=1, size=pc.shape) * torch.tensor(pc),
+",12

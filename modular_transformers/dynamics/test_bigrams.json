@@ -1,0 +1,5 @@
+{
+    "interesting": ["bed and", "bread and", "salt and", "thunder and", "social media", "credit card", "climate change", "artifical intelligence", "global warming", "state of", "fast food", "rising sea"],
+    "most_variance": ["or the", "on the", "off the", "using the", "up the", "<S> the", "both the", "including the", "by the", "where the", "use the", "and the", "out the", "that the", "like the"],
+    "least_variance": ["the fact", "Click here", "a number", "as well", "would like", "all kinds", "Sign up", "in order", "In addition", "For example", "the use", "Terms and", "All rights", "be able", "in accordance"]
+}   

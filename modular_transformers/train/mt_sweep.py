@@ -207,7 +207,7 @@ def main():
                 model.train()
                 torch.cuda.empty_cache()
             
-            if absolute_step % 2000 == 0:
+            if absolute_step % 20000 == 0:
                 save_dir = Path(
                     f'/om2/user/jackking/MyData/mt/miniberta_{data}/{model_name}/{run_name}/checkpoint_{absolute_step}')
                 save_dir.mkdir(parents=True, exist_ok=True)
@@ -219,6 +219,19 @@ def main():
                         "epoch": epoch,"steps": step,"optimizer": optimizer.state_dict(),
                         "scheduler": lr_scheduler.state_dict(),
                     },os.path.join(save_dir,'accelerator_states'))
+
+    # Save final model
+    save_dir = Path(
+        f'/om2/user/jackking/MyData/mt/miniberta_{data}/{model_name}/{run_name}/checkpoint_{absolute_step}')
+    save_dir.mkdir(parents=True, exist_ok=True)
+    accelerator.wait_for_everyone()
+    unwrapped_model = accelerator.unwrap_model(model)
+    unwrapped_model.save_pretrained(save_dir, is_main_process=accelerator.is_main_process, save_function=accelerator.save,state_dict=accelerator.get_state_dict(model))
+    accelerator.save(
+        {
+            "epoch": epoch,"steps": step,"optimizer": optimizer.state_dict(),
+            "scheduler": lr_scheduler.state_dict(),
+        },os.path.join(save_dir,'accelerator_states'))
                 
     accelerator.end_training()
     torch.cuda.empty_cache()
