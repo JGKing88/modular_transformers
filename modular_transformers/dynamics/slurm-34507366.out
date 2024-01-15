@@ -1,0 +1,28 @@
+/om2/user/jackking/anaconda/envs/modular_transformers/bin/python
+  0%|          | 0/10000 [00:00<?, ?it/s]  0%|          | 0/10000 [00:03<?, ?it/s]
+Traceback (most recent call last):
+  File "/om2/user/jackking/modular_transformers/modular_transformers/dynamics/time_is_layers.py", line 313, in <module>
+    orig_activations, max_token_num, orig_logits = get_activation_matrix(orig_model, bigram_tokens, max_token_num, num_layers)
+  File "/om2/user/jackking/modular_transformers/modular_transformers/dynamics/time_is_layers.py", line 96, in get_activation_matrix
+    output = model(input)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/transformers/models/gpt2/modeling_gpt2.py", line 1075, in forward
+    transformer_outputs = self.transformer(
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/transformers/models/gpt2/modeling_gpt2.py", line 899, in forward
+    outputs = block(
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/transformers/models/gpt2/modeling_gpt2.py", line 389, in forward
+    attn_outputs = self.attn(
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/transformers/models/gpt2/modeling_gpt2.py", line 311, in forward
+    query, key, value = self.c_attn(hidden_states).split(self.split_size, dim=2)
+  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1215, in _call_impl
+    hook_result = hook(self, input, result)
+  File "/om2/user/jackking/modular_transformers/modular_transformers/dynamics/time_is_layers.py", line 62, in hook_function
+    for i in range(min(max_token_num, input.shape[1])):
+AttributeError: 'tuple' object has no attribute 'shape'

@@ -59,12 +59,15 @@ class Activations():
     def register_monitoring_hooks(self, model, max_token_num):
         def hook_wrapper(layer):
             def hook_function(module, input, output):
-                for i in range(min(max_token_num, output.shape[1])):
-                    self.activations[i][layer].append(output[:, i, :].detach().cpu())
+                input = input[0]
+                for i in range(min(max_token_num, input.shape[1])):
+                    self.activations[i][layer].append(input[:, i, :].detach().cpu())
             return hook_function
 
         for i, layer in enumerate(model.transformer.h):
-            layer.mlp.c_proj.register_forward_hook(hook_wrapper(i))
+            # layer.mlp.c_proj.register_forward_hook(hook_wrapper(i))
+            # layer.attn.c_attn.register_forward_hook(hook_wrapper(i))
+            layer.ln_2.register_forward_hook(hook_wrapper(i))
 
 def make_activation_matrix(activations, max_token_num, num_layers):
     final = [[[] for _ in range(num_layers)] for _ in range(max_token_num)]
@@ -177,7 +180,9 @@ def register_pertubation_hooks(model, orig_pcas, num_components, pertubation_fun
             pc = pc / np.linalg.norm(pc)
             orthog = get_orthogonal_vector(pc)
             pcs.append((pc, orthog))
-        model.transformer.h[layer].mlp.dropout.register_forward_pre_hook(hook_wrapper(pcs))
+        # model.transformer.h[layer].mlp.dropout.register_forward_pre_hook(hook_wrapper(pcs))
+        # model.transformer.h[layer].attn.c_attn.register_forward_pre_hook(hook_wrapper(pcs))
+        model.transformer.h[layer].ln_2.register_forward_pre_hook(hook_wrapper(pcs))
 
 def complete_bigrams(model, bigrams):
     completions = []
@@ -212,11 +217,11 @@ def get_gpu_memory_usage():
         print("Failed to run nvidia-smi: ", e)
         return []
 
-def go(bigram_tokens, max_token_num, model_path, orig_activations, orig_pcas, pca_dim, pertubation_func, pertubation_size, name):
+def go(bigram_tokens, max_token_num, model_path, orig_activations, orig_pcas, orig_logits, pca_dim, pertubation_func, pertubation_size, perturbation_loc, name):
     layers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ,10, 11]
     # name = "random"
-    act_save_path = f"/om2/user/jackking/MyData/dynamics/activations/perturb_{pertubation_size}/{name}"
-    save_path = f"/om2/user/jackking/modular_transformers/modular_transformers/dynamics/perturb_{pertubation_size}/{name}"
+    act_save_path = f"/om2/user/jackking/MyData/dynamics/activations/{perturbation_loc}/perturb_{pertubation_size}/{name}"
+    save_path = f"/om2/user/jackking/modular_transformers/modular_transformers/dynamics/{perturbation_loc}/perturb_{pertubation_size}/{name}"
     if not os.path.exists(act_save_path):
         # Create the directory if it does not exist
         os.makedirs(act_save_path)
@@ -314,11 +319,13 @@ if __name__ == "__main__":
     gc.collect()
     torch.cuda.empty_cache() 
 
+    pertubation_loc = "before_mlp"
+
     for pertubation_size in [0.01, 1, 10]:
         pca_dim = 1
         pertubation_func = lambda pc, input, orthog_pc: generate_random_pertubation(pertubation_size, pc)
         name = "random"
-        go(bigram_tokens, max_token_num, model_path, orig_activations, orig_pcas, pca_dim, pertubation_func, pertubation_size, name)
+        go(bigram_tokens, max_token_num, model_path, orig_activations, orig_pcas, orig_logits, pca_dim, pertubation_func, pertubation_size, pertubation_loc, name)
 
         pca_dim = 20
         pertubation_func = lambda pc, input, orthog_pc: torch.tensor(orthog_pc) / np.linalg.norm(orthog_pc) * pertubation_size

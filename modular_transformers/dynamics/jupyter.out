@@ -1,69 +1,48 @@
-[I 2024-01-08 17:04:00.243 ServerApp] Package jupyterlab took 0.0000s to import
-[I 2024-01-08 17:04:00.329 ServerApp] Package jupyter_lsp took 0.0850s to import
-[W 2024-01-08 17:04:00.329 ServerApp] A `_jupyter_server_extension_points` function was not found in jupyter_lsp. Instead, a `_jupyter_server_extension_paths` function was found and will be used for now. This function name will be deprecated in future releases of Jupyter Server.
-[I 2024-01-08 17:04:00.365 ServerApp] Package jupyter_server_terminals took 0.0351s to import
-[I 2024-01-08 17:04:00.365 ServerApp] Package notebook took 0.0000s to import
-[I 2024-01-08 17:04:00.369 ServerApp] Package notebook_shim took 0.0000s to import
-[W 2024-01-08 17:04:00.369 ServerApp] A `_jupyter_server_extension_points` function was not found in notebook_shim. Instead, a `_jupyter_server_extension_paths` function was found and will be used for now. This function name will be deprecated in future releases of Jupyter Server.
-[I 2024-01-08 17:04:00.371 ServerApp] jupyter_lsp | extension was successfully linked.
-[I 2024-01-08 17:04:00.377 ServerApp] jupyter_server_terminals | extension was successfully linked.
-[W 2024-01-08 17:04:00.381 LabApp] 'allow_origin' has moved from NotebookApp to ServerApp. This config will be passed to ServerApp. Be sure to update your config before our next release.
-[W 2024-01-08 17:04:00.381 LabApp] 'port_retries' has moved from NotebookApp to ServerApp. This config will be passed to ServerApp. Be sure to update your config before our next release.
-[I 2024-01-08 17:04:00.384 ServerApp] jupyterlab | extension was successfully linked.
-[I 2024-01-08 17:04:00.390 ServerApp] notebook | extension was successfully linked.
-[I 2024-01-08 17:04:01.311 ServerApp] notebook_shim | extension was successfully linked.
-[I 2024-01-08 17:04:01.405 ServerApp] notebook_shim | extension was successfully loaded.
-[I 2024-01-08 17:04:01.408 ServerApp] jupyter_lsp | extension was successfully loaded.
-[I 2024-01-08 17:04:01.409 ServerApp] jupyter_server_terminals | extension was successfully loaded.
-[I 2024-01-08 17:04:01.425 LabApp] JupyterLab extension loaded from /om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/jupyterlab
-[I 2024-01-08 17:04:01.425 LabApp] JupyterLab application directory is /net/vast-storage/scratch/vast/evlab/jackking/anaconda/envs/modular_transformers/share/jupyter/lab
-[I 2024-01-08 17:04:01.426 LabApp] Extension Manager is 'pypi'.
-[I 2024-01-08 17:04:01.430 ServerApp] jupyterlab | extension was successfully loaded.
-[I 2024-01-08 17:04:01.434 ServerApp] notebook | extension was successfully loaded.
-[I 2024-01-08 17:04:01.434 ServerApp] Serving notebooks from local directory: /net/vast-storage/scratch/vast/evlab/jackking/modular_transformers/modular_transformers/dynamics
-[I 2024-01-08 17:04:01.434 ServerApp] Jupyter Server 2.10.1 is running at:
-[I 2024-01-08 17:04:01.434 ServerApp] http://node100:4444/lab?token=14b80fe9337efbaf3fa1e8ffc5d30acdac9af87d31888003
-[I 2024-01-08 17:04:01.434 ServerApp]     http://127.0.0.1:4444/lab?token=14b80fe9337efbaf3fa1e8ffc5d30acdac9af87d31888003
-[I 2024-01-08 17:04:01.434 ServerApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-[C 2024-01-08 17:04:01.449 ServerApp] 
+[I 2024-01-15 01:19:23.260 ServerApp] Package jupyterlab took 0.0000s to import
+[I 2024-01-15 01:19:23.361 ServerApp] Package jupyter_lsp took 0.1013s to import
+[W 2024-01-15 01:19:23.361 ServerApp] A `_jupyter_server_extension_points` function was not found in jupyter_lsp. Instead, a `_jupyter_server_extension_paths` function was found and will be used for now. This function name will be deprecated in future releases of Jupyter Server.
+[I 2024-01-15 01:19:23.401 ServerApp] Package jupyter_server_terminals took 0.0392s to import
+[I 2024-01-15 01:19:23.401 ServerApp] Package notebook took 0.0000s to import
+[I 2024-01-15 01:19:23.405 ServerApp] Package notebook_shim took 0.0000s to import
+[W 2024-01-15 01:19:23.405 ServerApp] A `_jupyter_server_extension_points` function was not found in notebook_shim. Instead, a `_jupyter_server_extension_paths` function was found and will be used for now. This function name will be deprecated in future releases of Jupyter Server.
+[I 2024-01-15 01:19:23.407 ServerApp] jupyter_lsp | extension was successfully linked.
+[I 2024-01-15 01:19:23.411 ServerApp] jupyter_server_terminals | extension was successfully linked.
+[W 2024-01-15 01:19:23.413 LabApp] 'allow_origin' has moved from NotebookApp to ServerApp. This config will be passed to ServerApp. Be sure to update your config before our next release.
+[W 2024-01-15 01:19:23.413 LabApp] 'port_retries' has moved from NotebookApp to ServerApp. This config will be passed to ServerApp. Be sure to update your config before our next release.
+[I 2024-01-15 01:19:23.416 ServerApp] jupyterlab | extension was successfully linked.
+[I 2024-01-15 01:19:23.420 ServerApp] notebook | extension was successfully linked.
+[I 2024-01-15 01:19:24.815 ServerApp] notebook_shim | extension was successfully linked.
+[I 2024-01-15 01:19:24.947 ServerApp] notebook_shim | extension was successfully loaded.
+[I 2024-01-15 01:19:24.949 ServerApp] jupyter_lsp | extension was successfully loaded.
+[I 2024-01-15 01:19:24.950 ServerApp] jupyter_server_terminals | extension was successfully loaded.
+[I 2024-01-15 01:19:24.968 LabApp] JupyterLab extension loaded from /om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/jupyterlab
+[I 2024-01-15 01:19:24.968 LabApp] JupyterLab application directory is /net/vast-storage/scratch/vast/evlab/jackking/anaconda/envs/modular_transformers/share/jupyter/lab
+[I 2024-01-15 01:19:24.969 LabApp] Extension Manager is 'pypi'.
+[I 2024-01-15 01:19:24.971 ServerApp] jupyterlab | extension was successfully loaded.
+[I 2024-01-15 01:19:24.975 ServerApp] notebook | extension was successfully loaded.
+[I 2024-01-15 01:19:24.975 ServerApp] Serving notebooks from local directory: /net/vast-storage/scratch/vast/evlab/jackking/modular_transformers/modular_transformers/dynamics
+[I 2024-01-15 01:19:24.975 ServerApp] Jupyter Server 2.10.1 is running at:
+[I 2024-01-15 01:19:24.975 ServerApp] http://node111:4444/lab?token=1aca19a1304bb2ff28e878ba979dba95d99b7861fab2bcdf
+[I 2024-01-15 01:19:24.975 ServerApp]     http://127.0.0.1:4444/lab?token=1aca19a1304bb2ff28e878ba979dba95d99b7861fab2bcdf
+[I 2024-01-15 01:19:24.975 ServerApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 2024-01-15 01:19:24.986 ServerApp] 
     
     To access the server, open this file in a browser:
-        file:///rdma/vast-rdma/vast-home/jackking/.local/share/jupyter/runtime/jpserver-852991-open.html
+        file:///rdma/vast-rdma/vast-home/jackking/.local/share/jupyter/runtime/jpserver-1058012-open.html
     Or copy and paste one of these URLs:
-        http://node100:4444/lab?token=14b80fe9337efbaf3fa1e8ffc5d30acdac9af87d31888003
-        http://127.0.0.1:4444/lab?token=14b80fe9337efbaf3fa1e8ffc5d30acdac9af87d31888003
-[I 2024-01-08 17:04:01.494 ServerApp] Skipped non-installed server(s): bash-language-server, dockerfile-language-server-nodejs, javascript-typescript-langserver, jedi-language-server, julia-language-server, pyright, python-language-server, python-lsp-server, r-languageserver, sql-language-server, texlab, typescript-language-server, unified-language-server, vscode-css-languageserver-bin, vscode-html-languageserver-bin, vscode-json-languageserver-bin, yaml-language-server
-[W 2024-01-08 17:07:15.016 ServerApp] 404 GET /hub/api (@172.16.24.234) 41.55ms referer=None
-[I 2024-01-08 17:07:15.023 JupyterNotebookApp] 302 GET /tree? (@172.16.24.234) 0.51ms
-[W 2024-01-08 17:07:18.046 ServerApp] 404 GET /hub/api (@172.16.24.234) 2.04ms referer=None
-[I 2024-01-08 17:07:18.055 JupyterNotebookApp] 302 GET /tree? (@172.16.24.234) 0.53ms
-[W 2024-01-08 18:18:08.426 ServerApp] 404 GET /hub/api (@172.16.24.234) 26.21ms referer=None
-[I 2024-01-08 18:18:08.432 JupyterNotebookApp] 302 GET /tree? (@172.16.24.234) 0.33ms
-[I 2024-01-08 18:18:10.388 ServerApp] Kernel started: 95ebe6eb-3297-447a-978c-6fe251b02f7e
-[I 2024-01-08 18:18:11.311 ServerApp] Connecting to kernel 95ebe6eb-3297-447a-978c-6fe251b02f7e.
-[W 2024-01-08 19:38:06.929 ServerApp] 404 GET /hub/api (@172.16.24.234) 4.03ms referer=None
-[I 2024-01-08 19:38:07.022 JupyterNotebookApp] 302 GET /tree? (@172.16.24.234) 0.57ms
-[I 2024-01-08 19:42:52.584 ServerApp] Kernel started: dc999fe8-619d-40f0-9c40-3cf82fe3529b
-[I 2024-01-08 19:42:53.609 ServerApp] Connecting to kernel dc999fe8-619d-40f0-9c40-3cf82fe3529b.
-[I 2024-01-08 19:43:02.446 ServerApp] Starting buffering for 95ebe6eb-3297-447a-978c-6fe251b02f7e:0a8e23c7-2999-47fd-9413-a3d03cb97ab3
-[W 2024-01-08 21:08:18.353 ServerApp] 404 GET /hub/api (@172.16.24.234) 3.64ms referer=None
-[I 2024-01-08 21:08:18.446 JupyterNotebookApp] 302 GET /tree? (@172.16.24.234) 0.61ms
-[I 2024-01-08 21:13:15.359 ServerApp] Starting buffering for dc999fe8-619d-40f0-9c40-3cf82fe3529b:dd876526-31b1-4a14-afb3-0185b9b2b3cc
-[I 2024-01-08 21:25:50.535 ServerApp] Kernel started: 64c1fef0-2c3a-408c-84d5-f416b031b0a5
-[I 2024-01-08 21:25:51.529 ServerApp] Connecting to kernel 64c1fef0-2c3a-408c-84d5-f416b031b0a5.
-[I 2024-01-09 01:15:19.859 ServerApp] Starting buffering for 64c1fef0-2c3a-408c-84d5-f416b031b0a5:d95408c0-2941-4ef3-9df0-e91df9a17112
-[W 2024-01-09 12:46:04.915 ServerApp] 404 GET /hub/api (@172.16.24.234) 6.30ms referer=None
-[I 2024-01-09 12:46:05.063 JupyterNotebookApp] 302 GET /tree? (@172.16.24.234) 0.54ms
-[W 2024-01-09 15:15:27.246 ServerApp] 404 GET /hub/api (@172.16.24.234) 4.85ms referer=None
-[I 2024-01-09 15:15:27.379 JupyterNotebookApp] 302 GET /tree? (@172.16.24.234) 0.49ms
-[I 2024-01-09 15:15:28.462 ServerApp] Connecting to kernel 64c1fef0-2c3a-408c-84d5-f416b031b0a5.
-[I 2024-01-09 15:29:01.405 ServerApp] Kernel interrupted: 64c1fef0-2c3a-408c-84d5-f416b031b0a5
-[I 2024-01-09 15:41:10.466 ServerApp] Kernel interrupted: 64c1fef0-2c3a-408c-84d5-f416b031b0a5
-[I 2024-01-09 19:26:57.290 ServerApp] Starting buffering for 64c1fef0-2c3a-408c-84d5-f416b031b0a5:024e2026-459c-4517-a2c7-a1e05f42eac7
-[W 2024-01-10 12:04:14.703 ServerApp] 404 GET /hub/api (@172.16.24.234) 4.81ms referer=None
-[I 2024-01-10 12:04:14.841 JupyterNotebookApp] 302 GET /tree? (@172.16.24.234) 0.72ms
-[I 2024-01-10 12:04:16.044 ServerApp] Connecting to kernel 64c1fef0-2c3a-408c-84d5-f416b031b0a5.
-[I 2024-01-10 15:47:56.957 ServerApp] Starting buffering for 64c1fef0-2c3a-408c-84d5-f416b031b0a5:eb0626ad-0a5d-4866-9452-f181ec97cc11
-[W 2024-01-10 20:41:53.494 ServerApp] 404 GET /hub/api (@172.16.24.234) 17.89ms referer=None
-[I 2024-01-10 20:41:53.614 JupyterNotebookApp] 302 GET /tree? (@172.16.24.234) 0.47ms
-slurmstepd: error: *** JOB 34450433 ON node100 CANCELLED AT 2024-01-10T20:42:07 ***
+        http://node111:4444/lab?token=1aca19a1304bb2ff28e878ba979dba95d99b7861fab2bcdf
+        http://127.0.0.1:4444/lab?token=1aca19a1304bb2ff28e878ba979dba95d99b7861fab2bcdf
+[I 2024-01-15 01:19:25.026 ServerApp] Skipped non-installed server(s): bash-language-server, dockerfile-language-server-nodejs, javascript-typescript-langserver, jedi-language-server, julia-language-server, pyright, python-language-server, python-lsp-server, r-languageserver, sql-language-server, texlab, typescript-language-server, unified-language-server, vscode-css-languageserver-bin, vscode-html-languageserver-bin, vscode-json-languageserver-bin, yaml-language-server
+[W 2024-01-15 01:20:26.658 ServerApp] 404 GET /hub/api (@172.16.24.234) 41.53ms referer=None
+[I 2024-01-15 01:20:26.668 JupyterNotebookApp] 302 GET /tree? (@172.16.24.234) 0.36ms
+[W 2024-01-15 01:20:35.624 ServerApp] 404 GET /hub/api (@172.16.24.234) 4.02ms referer=None
+[I 2024-01-15 01:20:35.632 JupyterNotebookApp] 302 GET /tree? (@172.16.24.234) 0.32ms
+[I 2024-01-15 01:20:40.604 ServerApp] Kernel started: 880bf09c-2b99-4ee3-bf6a-e268e174063c
+[I 2024-01-15 01:20:41.666 ServerApp] Connecting to kernel 880bf09c-2b99-4ee3-bf6a-e268e174063c.
+[I 2024-01-15 04:36:40.048 ServerApp] Starting buffering for 880bf09c-2b99-4ee3-bf6a-e268e174063c:cec4e750-4863-4e47-9d43-1cf8303807a7
+[W 2024-01-15 10:56:10.983 ServerApp] 404 GET /hub/api (@172.16.24.234) 5.32ms referer=None
+[I 2024-01-15 10:56:11.091 JupyterNotebookApp] 302 GET /tree? (@172.16.24.234) 0.58ms
+[I 2024-01-15 10:56:12.460 ServerApp] Connecting to kernel 880bf09c-2b99-4ee3-bf6a-e268e174063c.
+[W 2024-01-15 11:19:58.738 ServerApp] 404 GET /hub/api (@172.16.24.234) 3.97ms referer=None
+[I 2024-01-15 11:19:58.857 JupyterNotebookApp] 302 GET /tree? (@172.16.24.234) 0.42ms
+[I 2024-01-15 11:19:59.922 ServerApp] Connecting to kernel 880bf09c-2b99-4ee3-bf6a-e268e174063c.

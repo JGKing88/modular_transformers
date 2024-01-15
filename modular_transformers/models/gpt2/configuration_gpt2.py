@@ -20,12 +20,15 @@ activation_function (`str`, *optional*, defaults to `"gelu"`):
 class GPT2Config(transformers.GPT2Config):
     def __init__(self, config=None):
         
-        regsize = 768
-
         if config == None:
             #train level configs are not being set, not sure if this is an issue
             super().__init__()
         else:
+            if 'regsize' in config:
+                regsize = config["regsize"]
+            else: 
+                regsize = 768
+        
             super().__init__(hidden_size=regsize, vocab_size=config["vocab_size"], n_ctx=config["n_ctx"],bos_token_id=config["bos_token_id"],eos_token_id=config["eos_token_id"])
         
             self.bottleneck = config["bottleneck"]
