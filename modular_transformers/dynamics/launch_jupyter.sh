@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -J jupyter
-#SBATCH --time=7-00:00
+#SBATCH --time=1-00:00
 #SBATCH -n 1
 #SBATCH --gres=gpu:a100:1
 #SBATCH --mem 30G

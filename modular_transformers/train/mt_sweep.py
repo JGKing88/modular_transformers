@@ -118,7 +118,7 @@ def main():
     set_seed(seed)
     train_config['seed'] = seed
 
-    config = {'vocab_size': len(tokenizer), 'n_ctx': CONTEXT_LENGTH, 'bos_token_id': tokenizer.bos_token_id,
+    config = {'regsize': bottleneck_dim, 'vocab_size': len(tokenizer), 'n_ctx': CONTEXT_LENGTH, 'bos_token_id': tokenizer.bos_token_id,
                      'eos_token_id': tokenizer.eos_token_id, "bottleneck": bottleneck_dim, "n_layer": n_layer}
     config = GPT2Config(config)
     model = components.LM(config)
@@ -249,26 +249,18 @@ if __name__ == "__main__":
         'name': 'validation/valid_loss'
         },
     'parameters': {
-        'n_layer': {'values': [3, 4, 5, 6, 7, 8]},
-        'bottleneck': {'values': [256, 384, 576, 768, 960, 1152, 128]},
-        'random_seed_num': {'values': [1, 2, 3, 4, 5]}
+        # 'n_layer': {'values': [3, 4, 5, 6, 7, 8]},
+        'n_layer': {'values': [5, 7]},
+        # 'bottleneck': {'values': [256, 384, 576, 768, 960, 1152, 128]},
+        'bottleneck': {'values': [752]},
+        'random_seed_num': {'values': [1, 2]}
         }
     }       
 
     # sweep_id = wandb.sweep(sweep_configuration, project="bottleneck_sweep")
     # print(sweep_id)
-    sweep_id = "bwavwwqk"
-    wandb.agent(sweep_id=sweep_id, project="bottleneck_sweep", function=main)
+    # sweep_id = "bwavwwqk"
+    # wandb.agent(sweep_id=sweep_id, project="bottleneck_sweep", function=main)
 
-    # if accelerator.is_main_process:
-    #     sweep_id = wandb.sweep(sweep_configuration, project="bottleneck_sweep")
-    #     #save sweep id to file
-    #     with open('sweep_id.txt', 'w') as f:
-    #         f.write(sweep_id)
-    
-    # accelerator.wait_for_everyone()
-    # #load sweep id from file
-    # with open('sweep_id.txt', 'r') as f:
-    #     sweep_id = f.read()
-    # sweep_id = "f8qvb75y"
-    # wandb.agent(sweep_id=sweep_id, function=main)
+    sweep_id = "wpdanl57"
+    wandb.agent(sweep_id=sweep_id, project="bottleneck_sweep", function=main)

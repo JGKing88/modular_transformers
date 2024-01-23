@@ -32,3 +32,15 @@ tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
 
 import gc
 
+def load_data(num_bigrams):
+    text = open("alice.txt", "r").read()
+    tokenizer.encode(text)
+    return text
+
+#big model
+def load_model(model_path = "gpt2"):
+    if model_path == "gpt2":
+        orig_model = GPT2LMHeadModel.from_pretrained("gpt2")
+    else:
+        orig_model = components.LM.from_pretrained(model_path)
+    return orig_model.to(device)
