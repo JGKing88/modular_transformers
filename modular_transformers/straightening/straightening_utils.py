@@ -1,3 +1,5 @@
+
+
 import os
 import numpy as np
 import sys
@@ -15,9 +17,13 @@ def normalized(a, axis=-1, order=2):
 # just testing whay its not working
 def compute_model_activations(model,indexed_tokens,device):
     # get activations
+    model.eval()
     all_layers = []
     for i in tqdm(range(len(indexed_tokens))):
-        tokens_tensor = torch.tensor([indexed_tokens[i]]).to(device)
+        try:
+            tokens_tensor = torch.tensor([indexed_tokens[i]]).to(device)
+        except:
+            tokens_tensor = torch.tensor(indexed_tokens[i]).to(device)
         with torch.no_grad():
             outputs = model(tokens_tensor, output_hidden_states=True, output_attentions=False)
             hidden_states = outputs['hidden_states']
@@ -26,7 +32,9 @@ def compute_model_activations(model,indexed_tokens,device):
         all_layers.append(hidden_states)
     torch.cuda.empty_cache()
     return all_layers
+
 def compute_model_curvature(all_layers):
+    #all_layers shape: (samples, layers, tokens, hidden_size)
     all_layer_curve = []
     all_layer_curve_all = []
     all_layer_curve_rnd = []
@@ -45,4 +53,10 @@ def compute_model_curvature(all_layers):
     curve_ = np.stack(all_layer_curve).transpose()
     curve_change = (curve_[1:, :] - curve_[1, :])
     # make a dictionary with fieldds 'curve','curve_change','all_layer_curve_all' and return the dictionary
+    torch.cuda.empty_cache()
     return dict(curve=curve_,curve_change=curve_change,all_layer_curve_all=all_layer_curve_all)
+
+
+
+
+

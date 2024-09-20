@@ -1,12 +1,12 @@
 #!/bin/bash
 #SBATCH --job-name=MT_gpt2
-#SBATCH --time=2-12:00:00
+#SBATCH --time=7-0:00:00
 #SBATCH --gres=gpu:a100:1
 #SBATCH --ntasks=1
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=jackking@mit.edu
 #SBATCH --partition=evlab
-#SBATCH --mem=100G
+#SBATCH --mem=80G
 
 source ~/.bashrc
 
@@ -22,9 +22,15 @@ MT_HOME="/om2/user/${USER_NAME}/modular_transformers"
 conda activate modular_transformers
 echo $(which python)
 
-accelerate launch --config_file "${MT_HOME}/modular_transformers/train/configs/accelerate_config.yaml" "${MT_HOME}/modular_transformers/train/accelerate_train_gpt2.py"
+# accelerate launch --config_file "${MT_HOME}/modular_transformers/train/configs/deepspeed_config_A100.yaml" "${MT_HOME}/modular_transformers/train/extra_loss_train.py"
 
-#### accelerate launch --config_file "configs/accelerate_config.yaml" "testing_script.py"
+# accelerate launch --config_file "${MT_HOME}/modular_transformers/train/configs/accelerate_config.yaml" "${MT_HOME}/modular_transformers/train/extra_loss_train.py"
+accelerate launch --config_file "${MT_HOME}/modular_transformers/train/configs/accelerate_config.yaml" "/om2/user/jackking/modular_transformers/scripts/training_straightness/extra_loss_train.py"
+
+###accelerate launch --config_file "$/om2/user/jackking/modular_transformers/modular_transformers/train/configs/accelerate_config.yaml" "$/om2/user/jackking/modular_transformers/modular_transformers/train/extra_loss_train_test.py"
+
+
+###srun -n 1 -t 01:00:00 --gres=gpu:a100:1 --mem=120G --pty bash  
 
 
 #####SBATCH --mem=200G
@@ -38,7 +44,8 @@ accelerate launch --config_file "${MT_HOME}/modular_transformers/train/configs/a
 
 ####SBATCH --gres=gpu:a100:2
 
-########SBATCH --gres=gpu:RTXA6000:2
+########SBATCH --gres=gpu:1:2
+####SBATCH --gres=gpu:a100:1
 
 ######SBATCH --gres=gpu:1 --constraint=high-capacity
 

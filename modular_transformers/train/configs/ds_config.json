@@ -1,6 +1,13 @@
 {
-    "bf16": {
-        "enabled": "auto"
+    "fp16": {
+        "enabled": true
+    },
+    "optimizer": {
+        "type": "AdamW",
+        "params": {
+            "lr": "auto",
+            "weight_decay": "auto"
+        }
     },
     "zero_optimization": {
         "stage": "auto",

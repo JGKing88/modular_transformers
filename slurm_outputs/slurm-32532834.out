@@ -1,70 +1,0 @@
-/om2/user/jackking/anaconda/envs/modular_transformers/bin/python
-The following values were not passed to `accelerate launch` and had defaults used instead:
-	`--dynamo_backend` was set to a value of `'no'`
-To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
-wandb: Currently logged in as: jack-g-king (modular_transformers). Use `wandb login --relogin` to force relogin
-wandb: Appending key for api.wandb.ai to your netrc file: /home/jackking/.netrc
-wandb: wandb version 0.15.10 is available!  To upgrade, please run:
-wandb:  $ pip install wandb --upgrade
-wandb: Tracking run with wandb version 0.14.0
-wandb: Run data is saved locally in /net/vast-storage/scratch/vast/evlab/jackking/modular_transformers/slurm_outputs/wandb/run-20230910_171221-7r78ee6v
-wandb: Run `wandb offline` to turn off syncing.
-wandb: Syncing run snowy-dew-1
-wandb: ⭐️ View project at https://wandb.ai/modular_transformers/mt_gpt2
-wandb: 🚀 View run at https://wandb.ai/modular_transformers/mt_gpt2/runs/7r78ee6v
-768-768-768-768-768-768 size: 124.1M parameters
-  0%|          | 0/10 [00:00<?, ?it/s]
-  0%|          | 0/4348 [00:00<?, ?it/s][A
-
-  0%|          | 0/219 [00:00<?, ?it/s][A[A
-
-  0%|          | 1/219 [00:01<06:02,  1.66s/it][A[A  0%|          | 1/219 [00:02<07:18,  2.01s/it]
-  0%|          | 0/4348 [00:03<?, ?it/s]
-  0%|          | 0/10 [00:03<?, ?it/s]
-wandb: Waiting for W&B process to finish... (failed 1). Press Control-C to abort syncing.
-wandb: 
-wandb: Run history:
-wandb: train/batch_count ▁
-wandb:       train/epoch ▁
-wandb:  train/train_loss ▁
-wandb:     training_loss ▁
-wandb: 
-wandb: Run summary:
-wandb: train/batch_count 2
-wandb:       train/epoch 0.00046
-wandb:  train/train_loss 10.94992
-wandb:     training_loss 10.94992
-wandb: 
-wandb: 🚀 View run snowy-dew-1 at: https://wandb.ai/modular_transformers/mt_gpt2/runs/7r78ee6v
-wandb: Synced 6 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
-wandb: Find logs at: ./wandb/run-20230910_171221-7r78ee6v/logs
-Traceback (most recent call last):
-  File "/om2/user/jackking/modular_transformers/modular_transformers/train/accelerate_train_gpt2.py", line 183, in <module>
-    valid_loss, valid_accuracy = evaluate()
-  File "/om2/user/jackking/modular_transformers/modular_transformers/train/accelerate_train_gpt2.py", line 48, in evaluate
-    outputs = model(batch, labels=batch)
-  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
-    return forward_call(*input, **kwargs)
-  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/utils/operations.py", line 495, in __call__
-    return convert_to_fp32(self.model_forward(*args, **kwargs))
-  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/amp/autocast_mode.py", line 14, in decorate_autocast
-    return func(*args, **kwargs)
-  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/transformers/models/gpt2/modeling_gpt2.py", line 1106, in forward
-    loss = loss_fct(shift_logits.view(-1, shift_logits.size(-1)), shift_labels.view(-1))
-  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1194, in _call_impl
-    return forward_call(*input, **kwargs)
-  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/nn/modules/loss.py", line 1174, in forward
-    return F.cross_entropy(input, target, weight=self.weight,
-  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/torch/nn/functional.py", line 3026, in cross_entropy
-    return torch._C._nn.cross_entropy_loss(input, target, weight, _Reduction.get_enum(reduction), ignore_index, label_smoothing)
-torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 12.26 GiB (GPU 0; 47.54 GiB total capacity; 43.13 GiB already allocated; 1.92 GiB free; 44.57 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
-Traceback (most recent call last):
-  File "/om2/user/jackking/anaconda/envs/modular_transformers/bin/accelerate", line 8, in <module>
-    sys.exit(main())
-  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/commands/accelerate_cli.py", line 45, in main
-    args.func(args)
-  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/commands/launch.py", line 915, in launch_command
-    simple_launcher(args)
-  File "/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/accelerate/commands/launch.py", line 578, in simple_launcher
-    raise subprocess.CalledProcessError(returncode=process.returncode, cmd=cmd)
-subprocess.CalledProcessError: Command '['/om2/user/jackking/anaconda/envs/modular_transformers/bin/python', '/om2/user/jackking/modular_transformers/modular_transformers/train/accelerate_train_gpt2.py']' returned non-zero exit status 1.

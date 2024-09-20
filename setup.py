@@ -41,7 +41,7 @@ setup(
     author_email='jackking@mit.edu',
     url='https://github.com/JGKing88/modular_transformers',
     packages=find_packages(exclude=['tests']),
-    install_requires=requirements,
+    # install_requires=requirements,
     license="MIT license",
     zip_safe=False,
     keywords='computational neuroscience, human language, '

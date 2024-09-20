@@ -42,7 +42,7 @@ CONTEXT_LENGTH = 1024
 
 
 #obviously hardcoding gradient accumulation steps is not ideal, but it's the only way to get the code to run
-accelerator = Accelerator(log_with="wandb", gradient_accumulation_steps = int(64 / MAX_GPU_BATCH_SIZE))
+accelerator = Accelerator(log_with="wandb", gradient_accumulation_steps = 64 // MAX_GPU_BATCH_SIZE)
 
 
 # Evaluate function
@@ -87,27 +87,6 @@ def main():
     eval_dataloader = DataLoader(grouped_pad_valid, shuffle=False, batch_size=EVAL_BATCH_SIZE)
     train_dataloader = DataLoader(grouped_pad_train, shuffle=True, batch_size=batch_size)
     del grouped_pad_train, grouped_pad_valid
-
-    #set model config ---------------------------------------
-    # wandb.init()
-    # if accelerator.is_main_process:
-    #     accelerator.init_trackers("bottleneck_sweep")
-    #     tracker = accelerator.get_tracker("wandb", unwrap=True)
-    #     bottleneck_dim = tracker.config["bottleneck"]
-    #     n_layer = tracker.config["n_layer"]
-    #     # save bottleneck_dim and n_layer to file
-    #     with open('bottleneck_dim.txt', 'w') as f:
-    #         f.write(str(bottleneck_dim))
-    #     with open('n_layer.txt', 'w') as f:
-    #         f.write(str(n_layer))
-
-    # accelerator.wait_for_everyone()
-
-    # # load bottleneck_dim and n_layer from file
-    # with open('bottleneck_dim.txt', 'r') as f:
-    #     bottleneck_dim = int(f.read())
-    # with open('n_layer.txt', 'r') as f:
-    #     n_layer = int(f.read())
 
     accelerator.init_trackers("bottleneck_sweep")
     tracker = accelerator.get_tracker("wandb", unwrap=True)
@@ -252,8 +231,8 @@ if __name__ == "__main__":
         # 'n_layer': {'values': [3, 4, 5, 6, 7, 8]},
         'n_layer': {'values': [5, 7]},
         # 'bottleneck': {'values': [256, 384, 576, 768, 960, 1152, 128]},
-        'bottleneck': {'values': [752]},
-        'random_seed_num': {'values': [1, 2]}
+        'bottleneck': {'values': [788]},
+        'random_seed_num': {'values': [3, 4]}
         }
     }       
 
@@ -262,5 +241,8 @@ if __name__ == "__main__":
     # sweep_id = "bwavwwqk"
     # wandb.agent(sweep_id=sweep_id, project="bottleneck_sweep", function=main)
 
-    sweep_id = "wpdanl57"
+    # sweep_id = "wpdanl57"
+    # wandb.agent(sweep_id=sweep_id, project="bottleneck_sweep", function=main)
+
+    sweep_id = "47svg0eu"
     wandb.agent(sweep_id=sweep_id, project="bottleneck_sweep", function=main)

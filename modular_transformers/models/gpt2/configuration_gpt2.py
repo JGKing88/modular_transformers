@@ -1,7 +1,6 @@
 from modular_transformers.models import components
 import torch.nn as nn
 import transformers
-from modular_transformers.models.loss_utils import l2_reg
 
 
 """
@@ -31,14 +30,17 @@ class GPT2Config(transformers.GPT2Config):
         
             super().__init__(hidden_size=regsize, vocab_size=config["vocab_size"], n_ctx=config["n_ctx"],bos_token_id=config["bos_token_id"],eos_token_id=config["eos_token_id"])
         
+            if "bottleneck" not in config:
+                config["bottleneck"] = config["regsize"]
             self.bottleneck = config["bottleneck"]
             self.n_layer = config["n_layer"]
             if self.n_layer % 2 == 0:
                 self.n_embds = [regsize] * int(self.n_layer/2 - 1) + [self.bottleneck, self.bottleneck] + [regsize] * int(self.n_layer/2 - 1)
             else:
                 self.n_embds = [regsize] * int(self.n_layer//2) + [self.bottleneck] + [regsize] * int(self.n_layer//2)
-                            
-            self.n_heads = [4]*len(self.n_embds)
+
+            n_heads = config["n_heads"]                
+            self.n_heads = [n_heads]*len(self.n_embds)
             self.n_inners = [4*x for x in self.n_embds]
             # self.n_inners = [768*4, 768*4, 128*4, 768*4, 768*4]
             self.activation_functions = ["gelu"]*len(self.n_embds)
@@ -49,13 +51,18 @@ class GPT2Config(transformers.GPT2Config):
             self.n_inner = self.n_inners[0]
             self.activation_function = self.activation_functions[0]
                 
-            #0-indexed
-            # self.loss_hooks = {1:l2_reg}
-            self.loss_hooks = {}
-                
+            self.loss_hooks = config["loss_hooks"] if "loss_hooks" in config else None
+            self.normalize_loss = config["normalize_loss"] if "normalize_loss" in config else None
+            self.logit_multiplier = config["logit_multiplier"] if "logit_multiplier" in config else None
+            self.inter_multiplier = config["inter_multiplier"] if "inter_multiplier" in config else None
+
+            self.dropout_dict = config["dropout_dict"] if "dropout_dict" in config else None
+
             #make sure the loss hooks are valid
-            for layer in self.loss_hooks.keys():
-                assert layer < self.n_layer
+            if self.loss_hooks != None:
+                for layer in self.loss_hooks.keys():
+                    assert layer < self.n_layer
+            
 
     def get(self):
         #return as dictionary
@@ -70,7 +77,12 @@ class GPT2Config(transformers.GPT2Config):
                 "n_inner":self.n_inner,
                 "activation_function":self.activation_function,
                 "loss_hooks":self.loss_hooks,
-                "bottleneck":self.bottleneck
+                "bottleneck":self.bottleneck,
+                "loss_hooks": self.loss_hooks,
+                "normalize_loss": self.normalize_loss,
+                "logit_multiplier": self.logit_multiplier, 
+                "inter_multiplier": self.inter_multiplier,
+                "dropout_dict": self.dropout_dict
         }
 
 

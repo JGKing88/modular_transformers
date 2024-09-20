@@ -1,0 +1,10 @@
+/om2/user/jackking/anaconda/envs/modular_transformers/bin/python
+config.json:   0%|          | 0.00/735 [00:00<?, ?B/s]config.json: 100%|██████████| 735/735 [00:00<00:00, 577kB/s]
+Downloading shards:   0%|          | 0/2 [00:00<?, ?it/s]Downloading shards: 100%|██████████| 2/2 [00:00<00:00, 12.79it/s]Downloading shards: 100%|██████████| 2/2 [00:00<00:00, 12.78it/s]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:14<00:14, 14.61s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:16<00:00,  7.00s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:16<00:00,  8.14s/it]
+/om2/user/jackking/anaconda/envs/modular_transformers/lib/python3.8/site-packages/minicons/scorer.py:1213: UserWarning: tokenizer is changed by adding pad_token_id to the tokenizer.
+  warnings.warn(
+Traceback (most recent call last):
+  File "/om2/user/jackking/modular_transformers/scripts/adding_straightness/calculate_surprisals.py", line 51, in <module>
+    surprisals_tensor = torch.zeros(len(surprisals), len(surprisals[1]))
+IndexError: list index out of range
