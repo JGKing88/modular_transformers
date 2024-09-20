@@ -39,7 +39,7 @@ def get_sentences():
     
     first_sequence_len = 4
     max_len = 25
-    client = OpenAI(api_key="sk-proj-FWYe2bCKOYJHG4Ig7lhjT3BlbkFJnxH4AjkhP6Ia07XY1A5L")
+    client = OpenAI(api_key="")
 
     data_dir = "/rdma/vast-rdma/vast/evlab/ehoseini/MyData/sent_sampling/analysis/straightening/generation/sentences_ud_sentencez_token_filter_v3_textNoPeriod_cntx_3_cont_7.pkl"
     with open(data_dir, 'rb') as f:
