@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=MT_gpt2
-#SBATCH --time=1-00:00:00
+#SBATCH --time=2-00:00:00
 #SBATCH --gres=gpu:a100:1
 ###SBATCH --gres=gpu:RTXA6000:1
 
@@ -24,10 +24,10 @@ MT_HOME="/om2/user/${USER_NAME}/modular_transformers"
 conda activate modular_transformers
 echo $(which python)
 
-python "${MT_HOME}/scripts/training_straightness/curvature_analysis.py"
+# python "${MT_HOME}/scripts/new_project/analyzing_trained_models.py"
+
+python "${MT_HOME}/scripts/training_straightness/model_analysis.py"
 # python "${MT_HOME}/scripts/adding_straightness/perturb_straight.py"
 # python "${MT_HOME}/scripts/adding_straightness/perturb_straight_by_act_replacement.py"
 # python "${MT_HOME}/scripts/adding_straightness/calculate_surprisals.py"
 # python "${MT_HOME}/scripts/adding_straightness/compare_to_gpt4.py"
-
-

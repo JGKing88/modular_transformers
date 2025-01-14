@@ -20,7 +20,10 @@ from tqdm import tqdm
 
 import pickle
 import gc
-from modular_transformers.straightening.straightening_utils import compute_model_activations, compute_model_curvature
+from modular_transformers.straightening.straightening_utils import (
+    compute_model_activations,
+    compute_model_curvature,
+)
 from modular_transformers.models.gpt2.configuration_gpt2 import GPT2Config
 
 from modular_transformers.models import components
@@ -37,13 +40,13 @@ first_sequence_len = 4
 
 num_perturbations = 1
 
-#set seed
+# set seed
 set_seed(42)
 
-#set device
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-#set tokenizer
-tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+# set device
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# set tokenizer
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
 
 # import transformer_lens
 import transformer_lens.utils as utils
@@ -51,64 +54,81 @@ from transformer_lens.hook_points import (
     HookPoint,
 )  # Hooking utilities
 from transformer_lens import HookedTransformer, FactoredMatrix
+
 torch.set_grad_enabled(False)
 
 
 def get_orthogonal_vectors(directions):
     print(directions.shape)
     for i in range(0, directions.shape[1], 2):
-        directions[:, i], directions[:, i+1] = directions[:, i+1], -directions[:, i]
+        directions[:, i], directions[:, i + 1] = directions[:, i + 1], -directions[:, i]
     return directions
+
 
 def perturb_input_random(input, hook, multiplier):
     perturb_idx = input.shape[1] - 1
-    norm = (input[:, perturb_idx, :] - input[:, perturb_idx-1, :]).norm(dim=-1, keepdim=True)
+    norm = (input[:, perturb_idx, :] - input[:, perturb_idx - 1, :]).norm(
+        dim=-1, keepdim=True
+    )
     perturbation = torch.randn_like(input[:, perturb_idx, :])
     unit_perturbation = perturbation / perturbation.norm(dim=-1, keepdim=True)
-    input[:, perturb_idx, :] = input[:, perturb_idx, :] + unit_perturbation * norm * multiplier
+    input[:, perturb_idx, :] = (
+        input[:, perturb_idx, :] + unit_perturbation * norm * multiplier
+    )
     print(f"random size: {norm.mean() * multiplier}")
     return input
 
-def perturb_input_parallel(input, hook,  multiplier):
+
+def perturb_input_parallel(input, hook, multiplier):
     perturb_idx = input.shape[1] - 1
-    directions = input[:, perturb_idx, :] - input[:, perturb_idx-1, :]
+    directions = input[:, perturb_idx, :] - input[:, perturb_idx - 1, :]
     input[:, perturb_idx, :] = input[:, perturb_idx, :] + directions * multiplier
     print(f"parallel size: {directions.norm(dim=-1).mean() * multiplier}")
     return input
 
+
 def perturb_input_prev_parallel(input, hook, multiplier):
     perturb_idx = input.shape[1] - 1
-    directions = input[:, perturb_idx-1, :] - input[:, perturb_idx-2, :]
+    directions = input[:, perturb_idx - 1, :] - input[:, perturb_idx - 2, :]
     input[:, perturb_idx, :] = input[:, perturb_idx, :] + directions * multiplier
     print(f"prev parallel size: {directions.norm(dim=-1).mean() * multiplier}")
     return input
 
+
 def perturb_input_straighten(input, hook, multiplier):
     perturb_idx = input.shape[1] - 1
-    P2 = input[:, perturb_idx-1, :].clone().detach()
-    P1 = input[:, perturb_idx-2, :].clone().detach()
+    P2 = input[:, perturb_idx - 1, :].clone().detach()
+    P1 = input[:, perturb_idx - 2, :].clone().detach()
     Q = input[:, perturb_idx, :].clone().detach()
 
     D = P2 - P1
     Q_P1 = Q - P1
-    proj_d_q_p1 = torch.sum(D * Q_P1, dim=-1, keepdim=True) / torch.sum(D * D, dim=-1, keepdim=True) * D
+    proj_d_q_p1 = (
+        torch.sum(D * Q_P1, dim=-1, keepdim=True)
+        / torch.sum(D * D, dim=-1, keepdim=True)
+        * D
+    )
     perturbation = Q_P1 - proj_d_q_p1
     input[:, perturb_idx, :] = input[:, perturb_idx, :] + perturbation * multiplier
     print(f"straighten size: {perturbation.norm(dim=-1).mean() * multiplier}")
     return input
 
+
 def perturb_input_orthog(input, hook, multiplier):
     perturb_idx = input.shape[1] - 1
-    directions = input[:, perturb_idx, :] - input[:, perturb_idx-1, :]
+    directions = input[:, perturb_idx, :] - input[:, perturb_idx - 1, :]
     orthogonal_directions = get_orthogonal_vectors(directions)
-    input[:, perturb_idx, :] = input[:, perturb_idx, :] + orthogonal_directions * multiplier
+    input[:, perturb_idx, :] = (
+        input[:, perturb_idx, :] + orthogonal_directions * multiplier
+    )
     print(f"orthogonal size: {orthogonal_directions.norm(dim=-1).mean() * multiplier}")
     return input
 
+
 def perturb_input_on_path(input, hook, multiplier):
     perturb_idx = input.shape[1] - 1
-    P2 = input[:, perturb_idx-1, :].clone().detach()
-    P1 = input[:, perturb_idx-2, :].clone().detach()
+    P2 = input[:, perturb_idx - 1, :].clone().detach()
+    P1 = input[:, perturb_idx - 2, :].clone().detach()
     Q = input[:, perturb_idx, :].clone().detach()
 
     goal_point = (P2 - P1) + P2
@@ -117,12 +137,14 @@ def perturb_input_on_path(input, hook, multiplier):
     print(f"on path size: {perturbation.norm(dim=-1).mean() * multiplier}")
     return input
 
+
 def generate_perturbed_token(model, data, perturb_function, perturb_location):
     model.reset_hooks()
 
     sequence_len = data.shape[1]
 
     post_activations = torch.zeros((len(data), layer_num, sequence_len, embedding_size))
+
     def record_post_activations(input, hook, layer):
         post_activations[:, layer, :, :] = input
 
@@ -132,17 +154,19 @@ def generate_perturbed_token(model, data, perturb_function, perturb_location):
 
     fwd_hooks = []
     for layer in range(layer_num):
-        fwd_hooks.append((utils.get_act_name("resid_post", layer), partial(record_post_activations, layer=layer)))
+        fwd_hooks.append(
+            (
+                utils.get_act_name("resid_post", layer),
+                partial(record_post_activations, layer=layer),
+            )
+        )
         # fwd_hooks.append((utils.get_act_name("resid_mid", layer), partial(record_mid_activations, layer=layer)))
 
-    fwd_hooks.append((
-            perturb_location,
-            perturb_function
-        ))
+    fwd_hooks.append((perturb_location, perturb_function))
 
     logits = model.run_with_hooks(
-        data, 
-        return_type="logits", 
+        data,
+        return_type="logits",
         fwd_hooks=fwd_hooks,
     )
     model.reset_hooks()
@@ -156,18 +180,25 @@ def generate_perturbed_token(model, data, perturb_function, perturb_location):
 
 
 def generate_sentences(data, perturb_function, perturb_location):
-
+    """
+    Generate perturbed sentences with various perturbation types:
+    - Supports parallel, orthogonal, random perturbations
+    - Handles multiple perturbation steps
+    - Manages token generation
+    """
     model = HookedTransformer.from_pretrained("gpt2-xl", device=device)
 
     perturbed_data = data.clone()
     activations = [None] * num_perturbations
 
     for i in range(num_perturbations):
-        new_token, activations[i] = generate_perturbed_token(model, perturbed_data, perturb_function, perturb_location)
+        new_token, activations[i] = generate_perturbed_token(
+            model, perturbed_data, perturb_function, perturb_location
+        )
         perturbed_data = torch.cat([perturbed_data, new_token.unsqueeze(1)], dim=1)
         torch.cuda.empty_cache()
 
-    #generate new sentences by adding new token to the end of the sentence
+    # generate new sentences by adding new token to the end of the sentence
     for i in range(max_len - first_sequence_len - num_perturbations):
         logits = model(perturbed_data)
         new_token = logits.argmax(dim=-1)[:, -1]
@@ -176,36 +207,45 @@ def generate_sentences(data, perturb_function, perturb_location):
 
     return perturbed_data, activations
 
+
 def generate_curved_sentences(data, multiplier, perturb_location):
     perturb_function = partial(perturb_input_straighten, multiplier=multiplier)
     return generate_sentences(data, perturb_function, perturb_location)
+
 
 def generate_straightened_sentences(data, multiplier, perturb_location):
     perturb_function = partial(perturb_input_straighten, multiplier=multiplier)
     return generate_sentences(data, perturb_function, perturb_location)
 
+
 def generate_parallel_sentences(data, multiplier, perturb_location):
     perturb_function = partial(perturb_input_parallel, multiplier=multiplier)
     return generate_sentences(data, perturb_function, perturb_location)
-    
+
+
 def generate_orthogonal_sentences(data, multiplier, perturb_location):
     perturb_function = partial(perturb_input_orthog, multiplier=multiplier)
     return generate_sentences(data, perturb_function, perturb_location)
+
 
 def generate_random_sentences(data, multiplier, perturb_location):
     perturb_function = partial(perturb_input_random, multiplier=multiplier)
     return generate_sentences(data, perturb_function, perturb_location)
 
+
 def generate_prev_parallel_sentences(data, multiplier, perturb_location):
     perturb_function = partial(perturb_input_prev_parallel, multiplier=multiplier)
     return generate_sentences(data, perturb_function, perturb_location)
+
 
 def generate_on_path_sentences(data, multiplier, perturb_location):
     perturb_function = partial(perturb_input_on_path, multiplier=multiplier)
     return generate_sentences(data, perturb_function, perturb_location)
 
+
 def record_activations(model, data):
     post_activations = torch.zeros((len(data), layer_num, max_len, embedding_size))
+
     def record_post_activations(input, hook, layer):
         post_activations[:, layer, :, :] = input
 
@@ -215,12 +255,17 @@ def record_activations(model, data):
 
     fwd_hooks = []
     for layer in range(layer_num):
-        fwd_hooks.append((utils.get_act_name("resid_post", layer), partial(record_post_activations, layer=layer)))
+        fwd_hooks.append(
+            (
+                utils.get_act_name("resid_post", layer),
+                partial(record_post_activations, layer=layer),
+            )
+        )
         # fwd_hooks.append((utils.get_act_name("resid_mid", layer), partial(record_mid_activations, layer=layer)))
 
     model.run_with_hooks(
-        data, 
-        return_type=None, 
+        data,
+        return_type=None,
         fwd_hooks=fwd_hooks,
     )
     model.reset_hooks()
@@ -231,21 +276,21 @@ def record_activations(model, data):
 
 def run_perturbed(gen_data, gen_activations):
 
-    #gen activations shape: (num_sentences, num_layers, num_tokens, hidden_size)
+    # gen activations shape: (num_sentences, num_layers, num_tokens, hidden_size)
     gen_curvatures = [{}] * num_perturbations
 
     for i in range(num_perturbations):
         gen_curvatures[i]["post"] = compute_model_curvature(gen_activations[i]["post"])
         # gen_curvatures[i]["mid"] = compute_model_curvature(orthogonal_gen_activations[i]["mid"])
-        
-    #get curvature with sentences
+
+    # get curvature with sentences
     model = HookedTransformer.from_pretrained("gpt2-xl", device=device)
-    data_activations = record_activations(model,gen_data)
+    data_activations = record_activations(model, gen_data)
     data_curvature = {}
     data_curvature["post"] = compute_model_curvature(data_activations["post"])
     # data_curvature["mid"] = compute_model_curvature(data_activations["mid"])
 
-    #get surprisal with sentences
+    # get surprisal with sentences
     # batch_size = 100
     # data_batched_tensor = gen_data.view(-1, batch_size, gen_data.shape[1])
     # attn_mask = torch.ones(data_batched_tensor.shape[0], data_batched_tensor.shape[1], data_batched_tensor.shape[2])
@@ -256,8 +301,10 @@ def run_perturbed(gen_data, gen_activations):
     model = scorer.IncrementalLMScorer(model, tokenizer=tokenizer, device=device)
     batch_size = 1000
     for i in range(0, len(data_decoded), batch_size):
-        data_decoded_batch = data_decoded[i:i+batch_size]
-        surprisals = torch.tensor(model.sequence_score(data_decoded_batch, reduction = lambda x: -x.sum(0)))
+        data_decoded_batch = data_decoded[i : i + batch_size]
+        surprisals = torch.tensor(
+            model.sequence_score(data_decoded_batch, reduction=lambda x: -x.sum(0))
+        )
         if i == 0:
             surprisals_all = surprisals
         else:
@@ -267,12 +314,17 @@ def run_perturbed(gen_data, gen_activations):
         "surprisals": surprisals_all,
         "sentences": data_decoded,
         "curvatures": data_curvature,
-        "gen_curvatures": gen_curvatures
+        "gen_curvatures": gen_curvatures,
     }
     return return_dict
 
+
 def launch(data, perturb_location):
-    
+    """
+    Launch experiments with multiple perturbation types:
+    - Handles different multipliers and perturbation types
+    - Records and saves results
+    """
     perturb_funcs_dict = {
         "parallel": generate_parallel_sentences,
         "orthogonal": generate_orthogonal_sentences,
@@ -282,7 +334,7 @@ def launch(data, perturb_location):
         "prev_parallel": generate_prev_parallel_sentences,
         "neg_prev_parallel": generate_prev_parallel_sentences,
         "on_path": generate_on_path_sentences,
-        "off_path": generate_on_path_sentences
+        "off_path": generate_on_path_sentences,
     }
 
     path_to_dict = f"/om2/user/jackking/modular_transformers/scripts/adding_straightness/perturbedx{num_perturbations}_nocontext_perturb_straight_results_{perturb_location}.pkl"
@@ -290,7 +342,7 @@ def launch(data, perturb_location):
     #     new_surprisals = pickle.load(open(path_to_dict, "rb"))
     # else:
     new_surprisals = {}
-        
+
     data = data[:5000]
     cut_data = data[:, :first_sequence_len].to(device)
 
@@ -301,28 +353,49 @@ def launch(data, perturb_location):
 
     for multiplier in [0.1, 0.25, 0.5, 1, 2, 3]:
         new_surprisals[multiplier] = {}
-        for perturb_type in ["parallel", "orthogonal", "random", "straightened", "curved", "prev_parallel", "neg_prev_parallel", "on_path", "off_path"]:
+        for perturb_type in [
+            "parallel",
+            "orthogonal",
+            "random",
+            "straightened",
+            "curved",
+            "prev_parallel",
+            "neg_prev_parallel",
+            "on_path",
+            "off_path",
+        ]:
 
             perturb_type_gen_func = perturb_funcs_dict[perturb_type]
 
-            if perturb_type == "neg_prev_parallel" or perturb_type == "off_path" or perturb_type == "curved":
-                gen_data, gen_activations = perturb_type_gen_func(cut_data, -multiplier, perturb_location)
+            if (
+                perturb_type == "neg_prev_parallel"
+                or perturb_type == "off_path"
+                or perturb_type == "curved"
+            ):
+                gen_data, gen_activations = perturb_type_gen_func(
+                    cut_data, -multiplier, perturb_location
+                )
             else:
-                gen_data, gen_activations = perturb_type_gen_func(cut_data, multiplier, perturb_location)
-                
-            new_surprisals[multiplier][perturb_type] = run_perturbed(gen_data, gen_activations)
+                gen_data, gen_activations = perturb_type_gen_func(
+                    cut_data, multiplier, perturb_location
+                )
 
-    with open(path_to_dict, 'wb') as f:
+            new_surprisals[multiplier][perturb_type] = run_perturbed(
+                gen_data, gen_activations
+            )
+
+    with open(path_to_dict, "wb") as f:
         pickle.dump(new_surprisals, f)
-    
 
 
 if __name__ == "__main__":
     data_dir = "/rdma/vast-rdma/vast/evlab/ehoseini/MyData/sent_sampling/analysis/straightening/generation/sentences_ud_sentencez_token_filter_v3_textNoPeriod_cntx_3_cont_7.pkl"
-    with open(data_dir, 'rb') as f:
+    with open(data_dir, "rb") as f:
         data = pickle.load(f)
     tokenizer.pad_token = tokenizer.eos_token
-    data = tokenizer.batch_encode_plus(data, add_special_tokens=True, padding='longest', return_tensors="pt")["input_ids"]
+    data = tokenizer.batch_encode_plus(
+        data, add_special_tokens=True, padding="longest", return_tensors="pt"
+    )["input_ids"]
 
     perturb_location = "blocks.15.hook_resid_post"
     launch(data, perturb_location)
@@ -334,9 +407,8 @@ if __name__ == "__main__":
     launch(data, perturb_location)
     perturb_location = "blocks.5.hook_resid_post"
     launch(data, perturb_location)
-    
+
     perturb_location = "blocks.30.hook_resid_mid"
     launch(data, perturb_location)
     perturb_location = "blocks.30.hook_resid_post"
     launch(data, perturb_location)
-    

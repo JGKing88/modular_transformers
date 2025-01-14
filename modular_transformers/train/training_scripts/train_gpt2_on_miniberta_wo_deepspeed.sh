@@ -1,12 +1,12 @@
 #!/bin/bash
 #SBATCH --job-name=MT_gpt2
-#SBATCH --time=7-0:00:00
+#SBATCH --time=6-0:00:00
 #SBATCH --gres=gpu:a100:1
 #SBATCH --ntasks=1
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=jackking@mit.edu
 #SBATCH --partition=evlab
-#SBATCH --mem=80G
+#SBATCH --mem=50G
 
 source ~/.bashrc
 

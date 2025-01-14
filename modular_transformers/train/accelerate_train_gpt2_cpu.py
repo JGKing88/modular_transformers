@@ -3,15 +3,17 @@ import os
 import torch
 from torch.utils.data import DataLoader
 from datasets import load_dataset, load_from_disk
-from accelerate import (Accelerator)
-from accelerate.utils import (LoggerType, DummyOptim, DummyScheduler)
-from transformers import (AdamW,
-                          AutoTokenizer,
-                          AutoModelForCausalLM,
-                          get_linear_schedule_with_warmup,
-                         get_cosine_schedule_with_warmup,
-                          set_seed,
-                          AutoConfig)
+from accelerate import Accelerator
+from accelerate.utils import LoggerType, DummyOptim, DummyScheduler
+from transformers import (
+    AdamW,
+    AutoTokenizer,
+    AutoModelForCausalLM,
+    get_linear_schedule_with_warmup,
+    get_cosine_schedule_with_warmup,
+    set_seed,
+    AutoConfig,
+)
 from tqdm.auto import tqdm
 import math
 from modular_transformers.train.utils import Group_Texts
@@ -34,8 +36,8 @@ Set config to use DeepSpeed
 """
 
 MAX_GPU_BATCH_SIZE = 8
-EVAL_BATCH_SIZE = 1 #32
-CONTEXT_LENGTH = 1024 #1024
+EVAL_BATCH_SIZE = 1  # 32
+CONTEXT_LENGTH = 1024  # 1024
 
 # Evaluate function
 # def evaluate():
@@ -57,12 +59,18 @@ CONTEXT_LENGTH = 1024 #1024
 if __name__ == "__main__":
     # run_name='gaussian_init_1'
     run_name = "test"
-    model_name='gpt2'
-    data='10M'
+    model_name = "gpt2"
+    data = "10M"
     batch_size = 1
-    #chkpoint=43750
+    # chkpoint=43750
     chkpoint = None
-    train_config = {"lr": 0.0006, "num_epochs": 1, "correct_bias": True, "seed": 42, "batch_size": batch_size}
+    train_config = {
+        "lr": 0.0006,
+        "num_epochs": 1,
+        "correct_bias": True,
+        "seed": 42,
+        "batch_size": batch_size,
+    }
     tokenizer = AutoTokenizer.from_pretrained("gpt2", fast=False)
     tokenizer.pad_token = tokenizer.eos_token
     # grouped_pad_train = load_from_disk(
@@ -74,21 +82,25 @@ if __name__ == "__main__":
     # grouped_pad_valid = load_from_disk(
     #     os.path.join('/om/user/ehoseini/MyData/miniBERTa_v2/', f'miniBERTa-{data}-crunched',
     #                  f'valid_context_len_{CONTEXT_LENGTH}'))
-    
-    print('here')
-    grouped_pad_train = load_from_disk('/Users/jackking/Desktop/code/modular_transformers/modular_transformers/train/miniberta_datasets/miniBERTa-10M-crunched/valid_context_len_1024')
+
+    print("here")
+    grouped_pad_train = load_from_disk(
+        "/Users/jackking/Desktop/code/modular_transformers/modular_transformers/train/miniberta_datasets/miniBERTa-10M-crunched/valid_context_len_1024"
+    )
     # grouped_pad_valid = load_from_disk('/Users/jackking/Desktop/code/modular_transformers/modular_transformers/train/miniberta_datasets/miniBERTa-10M-crunched/valid_context_len_1024')
 
     # If the batch size is too big we use gradient accumulation
     gradient_accumulation_steps = 8
-    if train_config['batch_size'] > MAX_GPU_BATCH_SIZE:
-        gradient_accumulation_steps = train_config['batch_size'] // MAX_GPU_BATCH_SIZE
+    if train_config["batch_size"] > MAX_GPU_BATCH_SIZE:
+        gradient_accumulation_steps = train_config["batch_size"] // MAX_GPU_BATCH_SIZE
         batch_size = MAX_GPU_BATCH_SIZE
     # accelerator = Accelerator(log_with="wandb",gradient_accumulation_steps=gradient_accumulation_steps)
 
     # eval_dataloader = DataLoader(grouped_pad_valid, shuffle=False, batch_size=EVAL_BATCH_SIZE)
     # test_dataloader = DataLoader(grouped_pad_test, shuffle=True, batch_size=EVAL_BATCH_SIZE)
-    train_dataloader = DataLoader(grouped_pad_train, shuffle=True, batch_size=batch_size)
+    train_dataloader = DataLoader(
+        grouped_pad_train, shuffle=True, batch_size=batch_size
+    )
     # del grouped_pad_train, grouped_pad_valid, grouped_pad_test
     del grouped_pad_train
 
@@ -96,10 +108,14 @@ if __name__ == "__main__":
     # Change name test to log to different project
     # accelerator.init_trackers("bplm_gpt2", config=train_config,init_kwargs={'name':run_name})
 
-    #model level config is set in configuration.py
-    #train level config is set here
-    override_vars = {'vocab_size': len(tokenizer), 'n_ctx': CONTEXT_LENGTH, 'bos_token_id': tokenizer.bos_token_id,
-                     'eos_token_id': tokenizer.eos_token_id}
+    # model level config is set in configuration.py
+    # train level config is set here
+    override_vars = {
+        "vocab_size": len(tokenizer),
+        "n_ctx": CONTEXT_LENGTH,
+        "bos_token_id": tokenizer.bos_token_id,
+        "eos_token_id": tokenizer.eos_token_id,
+    }
     config = GPT2Config(override_vars)
     model = components.LM(config)
 
@@ -116,7 +132,7 @@ if __name__ == "__main__":
     #     state_dict=chkpnt_model.state_dict()
     # # check if there is a previous run
     # model = AutoModelForCausalLM.from_pretrained(model_name, config=config, state_dict=state_dict)
-    #state_dict=None
+    # state_dict=None
 
     # del state_dict
     torch.cuda.empty_cache()
@@ -124,7 +140,7 @@ if __name__ == "__main__":
     model_size = sum(t.numel() for t in model.parameters())
     print(f"{model_name} size: {model_size / 1000 ** 2:.1f}M parameters")
     # model = model.to(accelerator.device)
-    device = 'cpu'
+    device = "cpu"
     model = model.to(device)
 
     # Define optimizer
@@ -156,34 +172,40 @@ if __name__ == "__main__":
 
     # Logging variables
     batch_count = 0
-    n_steps_per_epoch = math.ceil(len(train_dataloader.dataset) / train_config['batch_size'])
+    n_steps_per_epoch = math.ceil(
+        len(train_dataloader.dataset) / train_config["batch_size"]
+    )
     # Begin training for number of epochs
-    abs_step=0
-    for epoch in tqdm(range(train_config['num_epochs'])):
+    abs_step = 0
+    for epoch in tqdm(range(train_config["num_epochs"])):
         model.train()
         torch.cuda.empty_cache()
-        for step, batch in tqdm(enumerate(train_dataloader), total=len(train_dataloader)):
-            batch = [torch.stack(batch[x]).transpose(1, 0) for x in ['input_ids', 'attention_mask']]
-            total_loss=0
+        for step, batch in tqdm(
+            enumerate(train_dataloader), total=len(train_dataloader)
+        ):
+            batch = [
+                torch.stack(batch[x]).transpose(1, 0)
+                for x in ["input_ids", "attention_mask"]
+            ]
+            total_loss = 0
             # with accelerator.accumulate(model):
             outputs = model(batch[0], labels=batch[0], attention_mask=batch[1])
             loss = outputs.loss
 
             # dealing with extra losses. can change by case
-            #can not do this here and instead backpropagate from the middle (in components.py)
+            # can not do this here and instead backpropagate from the middle (in components.py)
             extra_losses = model.output_extra_losses()
             for extra_loss in extra_losses.values():
                 if extra_loss is not None:
                     loss += extra_loss
 
-            total_loss+=loss
-                # accelerator.backward(loss)
+            total_loss += loss
+            # accelerator.backward(loss)
             loss.backward()
             lr_scheduler.step()
             optimizer.step()
             optimizer.zero_grad()
             batch_count += len(batch)
-
 
             # accelerator.log({"training_loss": total_loss}, step=abs_step)
             # accelerator.log({"train/train_loss": total_loss}, step=abs_step)
@@ -210,6 +232,6 @@ if __name__ == "__main__":
             #         },os.path.join(save_dir,'accelerator_states'))
             #     model.train()
             #     torch.cuda.empty_cache()
-            abs_step+=1
+            abs_step += 1
     # accelerator.end_training()
     torch.cuda.empty_cache()

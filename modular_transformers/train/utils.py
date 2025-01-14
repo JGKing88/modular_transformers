@@ -38,17 +38,19 @@ and also from Huggingface notebook (https://github.com/huggingface/notebooks/blo
 specifically the group_texts function. 
 """
 
+
 class Group_Texts:
-    def __init__(self,
-                 tokenized_dataset,
-                 tokenizer,
-                 seq_len: int,
-                 stride: Optional[int] = None,
-                 padding: Optional[bool] = False,
-                 padding_tok: Optional[int] = None,
-                 test_bool: Optional[bool] = False,
-                 batch_size: Optional[int] = 1000
-                 ):
+    def __init__(
+        self,
+        tokenized_dataset,
+        tokenizer,
+        seq_len: int,
+        stride: Optional[int] = None,
+        padding: Optional[bool] = False,
+        padding_tok: Optional[int] = None,
+        test_bool: Optional[bool] = False,
+        batch_size: Optional[int] = 1000,
+    ):
         # Set values for the class variables
         self.dataset = tokenized_dataset
         self.seq_len = seq_len
@@ -60,7 +62,10 @@ class Group_Texts:
         if padding is False and stride is None:
             self.stride = seq_len
             self.padding = padding
-            print("Grouping texts with default mode without padding or stride at context length of", self.seq_len)
+            print(
+                "Grouping texts with default mode without padding or stride at context length of",
+                self.seq_len,
+            )
         # Padding true, stride None -> Only padding
         elif padding is True and stride is None:
             self.stride = seq_len
@@ -72,13 +77,24 @@ class Group_Texts:
                 # Can also set to the input id value of eos token
                 self.padding_tok = (tokenizer(tokenizer.eos_token))["input_ids"][0]
                 print(
-                    f'Padding token defaulting to {(tokenizer(tokenizer.eos_token))["input_ids"][0]}, it will be masked by labels and attention mask')
-            print("Grouping texts with padding with padding token", self.padding_tok, "at context length of", self.seq_len)
+                    f'Padding token defaulting to {(tokenizer(tokenizer.eos_token))["input_ids"][0]}, it will be masked by labels and attention mask'
+                )
+            print(
+                "Grouping texts with padding with padding token",
+                self.padding_tok,
+                "at context length of",
+                self.seq_len,
+            )
         # Padding false, stride a value -> Only stride
         elif padding is False and stride is not None:
             self.stride = stride
             self.padding = padding
-            print("Grouping texts at a stride of", self.stride, "at context length of", self.seq_len)
+            print(
+                "Grouping texts at a stride of",
+                self.stride,
+                "at context length of",
+                self.seq_len,
+            )
         # Padding true, stride a value -> Stride with padding
         elif padding is True and stride is not None:
             self.stride = stride
@@ -88,14 +104,24 @@ class Group_Texts:
             elif padding_tok is None:
                 self.padding_tok = (tokenizer(tokenizer.eos_token))["input_ids"][0]
                 print(
-                    f'Padding token defaulting to {(tokenizer(tokenizer.eos_token))["input_ids"][0]}, it will be masked by labels and attention mask')
-            print("Grouping texts with padding with padding token", self.padding_tok, "and stride of", self.stride, "at context length of", self.seq_len)
+                    f'Padding token defaulting to {(tokenizer(tokenizer.eos_token))["input_ids"][0]}, it will be masked by labels and attention mask'
+                )
+            print(
+                "Grouping texts with padding with padding token",
+                self.padding_tok,
+                "and stride of",
+                self.stride,
+                "at context length of",
+                self.seq_len,
+            )
 
     # Actual function used on instantiated object of Group_Texts
     # Uses map function send rows of batch_size to be grouped by specific grouping function
     def group_texts(self):
         # Call preferred grouping function
-        return self.dataset.map(self.get_grouping, batched=True, batch_size=self.batch_size)
+        return self.dataset.map(
+            self.get_grouping, batched=True, batch_size=self.batch_size
+        )
 
     # Default function with no padding or striding
     # Drops tokens that do not fit into a multiple of seq_len
@@ -105,7 +131,10 @@ class Group_Texts:
         total_length = len(concatenated_examples[list(examples.keys())[0]])
         total_length_use = (total_length // self.seq_len) * self.seq_len
         result = {
-            k: [t[i: i + self.seq_len] for i in range(0, total_length_use, self.seq_len)]
+            k: [
+                t[i : i + self.seq_len]
+                for i in range(0, total_length_use, self.seq_len)
+            ]
             for k, t in concatenated_examples.items()
         }
         result["labels"] = result["input_ids"].copy()
@@ -141,7 +170,10 @@ class Group_Texts:
             concatenated_examples[key] = t1
         total_length_use = len(concatenated_examples[list(examples.keys())[0]])
         result = {
-            k: [t[i: i + self.seq_len] for i in range(0, total_length_use, self.seq_len)]
+            k: [
+                t[i : i + self.seq_len]
+                for i in range(0, total_length_use, self.seq_len)
+            ]
             for k, t in concatenated_examples.items()
         }
         # Labels is copied from input ids
@@ -149,8 +181,11 @@ class Group_Texts:
 
         # Label is -100 if attention mask is 0, otherwise same as input ids
         result["labels"] = [
-            [-100 if mask == 0 else token for mask, token in mask_and_tokens] for mask_and_tokens in
-            [zip(masks, labels) for masks, labels in zip(result["attention_mask"], result["labels"])]
+            [-100 if mask == 0 else token for mask, token in mask_and_tokens]
+            for mask_and_tokens in [
+                zip(masks, labels)
+                for masks, labels in zip(result["attention_mask"], result["labels"])
+            ]
         ]
 
         # Some checks to make sure all rows are same as sequence length
@@ -169,7 +204,9 @@ class Group_Texts:
         total_length = len(concatenated_examples[list(examples.keys())[0]])
         # When stride is less than sequence length, overlaps are expected
         if self.stride < self.seq_len:
-            total_length_use = ((total_length - self.seq_len + self.stride) // self.stride) * self.stride
+            total_length_use = (
+                (total_length - self.seq_len + self.stride) // self.stride
+            ) * self.stride
         # When stride is bigger, no overlaps are expected and some tokens in between batches will be skipped
         elif self.stride > self.seq_len:
             # The first index is counted
@@ -184,8 +221,11 @@ class Group_Texts:
 
         # Creates a new Dict based on the total_length_use from each case
         result = {
-            k: [t[i: i + self.seq_len] for i in range(0, total_length_use, self.stride)]
-            for k, t in concatenated_examples.items()}
+            k: [
+                t[i : i + self.seq_len] for i in range(0, total_length_use, self.stride)
+            ]
+            for k, t in concatenated_examples.items()
+        }
 
         # Copies over input ids to new column called labels
         result["labels"] = deepcopy(result["input_ids"])
@@ -226,7 +266,9 @@ class Group_Texts:
         concatenated_examples = {k: sum(examples[k], []) for k in examples.keys()}
         total_length = len(concatenated_examples[list(examples.keys())[0]])
         # Finds just the quotient of total_length - seq_len by stride
-        total_length_stride = ((total_length - self.seq_len + self.stride) // self.stride) * self.stride
+        total_length_stride = (
+            (total_length - self.seq_len + self.stride) // self.stride
+        ) * self.stride
 
         # If stride is less than sequence length, different padding method is employed.
         # Get the remainder and subtract to get the length of padding to add to fit the last stride
@@ -249,8 +291,13 @@ class Group_Texts:
             # Add self.stride to add 1 more index for padded index
             total_length_use = total_length_stride + self.stride
             # New Dict object based that samples at length seq_len with stride
-            result = {k: [t[i: i + self.seq_len] for i in range(0, total_length_use, self.stride)] for k, t in
-                      concatenated_examples.items()}
+            result = {
+                k: [
+                    t[i : i + self.seq_len]
+                    for i in range(0, total_length_use, self.stride)
+                ]
+                for k, t in concatenated_examples.items()
+            }
         elif self.stride > self.seq_len:
             # Count index is 1 for the first index
             count_length = total_length - self.seq_len
@@ -265,7 +312,9 @@ class Group_Texts:
                 to_add_input_id = [self.padding_tok] * to_add
                 to_add_atten_mask = [0] * to_add
                 total_length_use = (count_index + 1) * self.stride
-                pad_dict = dict(input_ids=to_add_input_id, attention_mask=to_add_atten_mask)
+                pad_dict = dict(
+                    input_ids=to_add_input_id, attention_mask=to_add_atten_mask
+                )
                 for key in concatenated_examples.keys():
                     t = concatenated_examples[key]
                     t1 = [item for sublist in [t, pad_dict[key]] for item in sublist]
@@ -275,8 +324,12 @@ class Group_Texts:
                 total_length_use = count_index * self.stride
             # New Dict object based that samples at length seq_len with stride
             result = {
-                k: [t[i: i + self.seq_len] for i in range(0, total_length_use, self.stride)]
-                for k, t in concatenated_examples.items()}
+                k: [
+                    t[i : i + self.seq_len]
+                    for i in range(0, total_length_use, self.stride)
+                ]
+                for k, t in concatenated_examples.items()
+            }
 
         # Copies over input ids to new column called labels
         result["labels"] = deepcopy(result["input_ids"])
@@ -284,8 +337,11 @@ class Group_Texts:
         # Label is -100 if attention mask is 0, otherwise same as input ids
         # Just for padding at the end
         result["labels"] = [
-            [-100 if mask == 0 else token for mask, token in mask_and_tokens] for mask_and_tokens in
-            [zip(masks, labels) for masks, labels in zip(result["attention_mask"], result["labels"])]
+            [-100 if mask == 0 else token for mask, token in mask_and_tokens]
+            for mask_and_tokens in [
+                zip(masks, labels)
+                for masks, labels in zip(result["attention_mask"], result["labels"])
+            ]
         ]
 
         # SKIP for training, Don't skip for testing

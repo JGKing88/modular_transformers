@@ -2,10 +2,10 @@
 #SBATCH -J jupyter
 #SBATCH --time=2-00:00
 #SBATCH -n 1
-###SBATCH --gres=gpu:a100:1
-#SBATCH --gres=gpu:1
+####SBATCH --gres=gpu:a100:1
+###SBATCH --gres=gpu:1
 #SBATCH --mem 100G
-###SBATCH --partition=evlab
+####SBATCH --partition=evlab
 #SBATCH -o jupyter.out
 #SBATCH --exclude=node111
 ###SBATCH --exclude=node105

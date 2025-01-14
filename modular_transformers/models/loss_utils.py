@@ -155,10 +155,19 @@ def l1_curvature(tensor, attn_mask=None):
 
     return curvature_sparsity
 
-def curvature(tensor):
+def curvature(tensor, attn_mask=None):
+
+    if isinstance(tensor, tuple):
+        tensor = tensor[0]
+
+    if attn_mask is not None:
+        mask_matrix = torch.ones_like(tensor)
+        mask_matrix[attn_mask[0], attn_mask[1]] = 0
+        tensor = tensor * mask_matrix
+
     token_0s = tensor[:, :-2]
     token_1s = tensor[:, 1:-1]  
-    token_2s = tensor[:, 2:] 
+    token_2s = tensor[:, 2:]
 
     cosine_sim = 1 - torch.nn.functional.cosine_similarity(token_2s - token_1s, token_1s - token_0s, dim=2)
     cosine_sim_mean = torch.mean(cosine_sim, axis=(0, 1))

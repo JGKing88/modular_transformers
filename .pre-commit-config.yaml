@@ -1,0 +1,13 @@
+repos:
+  - repo: https://github.com/psf/black
+    rev: 24.10.0  # Use a specific version or 'stable' for the latest stable release
+    hooks:
+      - id: black
+  # - repo: https://github.com/PyCQA/flake8
+  #   rev: stable
+  #   hooks:
+  #     - id: flake8
+  - repo: https://github.com/PyCQA/docformatter
+    rev: v1.7.5
+    hooks:
+      - id: docformatter
