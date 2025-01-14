@@ -12,7 +12,7 @@ Making internal model representations straighter by perturbing the activations w
 Training transformers with toy data generated with different statistical models to assess how the statistics of the training data affect the learned trajectory representations.
 
 ## dimensionality_reduction
-Attempting to identify manifolds/subspaces/axes which vary in relation to curvature.
+Attempting to identify manifolds/subspaces/axes which vary in relation to trajectory curvature.
 
 ## attention_interpretability
 Applying classic mechanistic interp techniques (ablations, attention visualizations, direct logit attribution) and a few curvature specific techniques to probe the mechanisms which are implicated in trajectory straightening.
