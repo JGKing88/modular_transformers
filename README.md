@@ -1,6 +1,6 @@
 # modular-transformers
 
-Repository for the research I have conducted in Ev Fedorenko's lab at MIT. Initially this was a library that made it easy to build autoregressive transformers with by-layer architecture/hyper-parameter variability, but it has since become the repository where I explore the phenomena of trajectory straightening in LLMs (https://arxiv.org/abs/2311.04930).  Now the bulk of my research lives in scripts and is organized as follows:
+Repository for the research I have conducted in Ev Fedorenko's lab at MIT. Initially this was a library that made it easy to build autoregressive transformers with by-layer architecture/hyper-parameter variability, but it has since become the repository where I explore the phenomena of trajectory straightening in LLMs (https://arxiv.org/abs/2311.04930).  Now the bulk of my research lives in scripts/ and is organized as follows:
 
 ## training_straightness
 Training autoregressive transformers with weird architectures, variable hyper-parameters, and extra loss functions. Evaluating effects of these training features on internal curvature and output.  
